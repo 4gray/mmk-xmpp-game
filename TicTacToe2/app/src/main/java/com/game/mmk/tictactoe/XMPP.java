@@ -43,7 +43,8 @@ public class XMPP extends AsyncTask {
         XMPPTCPConnectionConfiguration.Builder configBuilder = XMPPTCPConnectionConfiguration.builder();
 
         //configBuilder.setDebuggerEnabled(true);
-        configBuilder.setUsernameAndPassword("bob", "S3#fsd24_Fa3");
+        configBuilder.setUsernameAndPassword("bob", "bob");
+        //configBuilder.setUsernameAndPassword("alice", "alice");
         configBuilder.setResource("SomeResource");
         configBuilder.setServiceName("planetjabber.de");
 
