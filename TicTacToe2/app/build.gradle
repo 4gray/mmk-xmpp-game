@@ -21,5 +21,12 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
+
+    // optional features
+
     compile 'com.android.support:appcompat-v7:21.0.3'
+    compile 'org.igniterealtime.smack:smack-android:4.1.0-rc1'
+    compile 'org.igniterealtime.smack:smack-tcp:4.1.0-rc1'
+    compile 'org.igniterealtime.smack:smack-android-extensions:4.1.0-rc1'
+    compile 'com.google.android.gms:play-services:6.5.87'
 }
