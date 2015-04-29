@@ -19,10 +19,13 @@ import org.jivesoftware.smack.chat.ChatManager;
 import org.jivesoftware.smack.chat.ChatManagerListener;
 import org.jivesoftware.smack.chat.ChatMessageListener;
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.roster.Roster;
+import org.jivesoftware.smack.roster.RosterEntry;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.concurrent.ExecutionException;
 
 
@@ -67,8 +70,25 @@ public class LoginActivity extends ActionBarActivity {
 
         Log.d("returned: ", String.valueOf(connection.isConnected()));
 
+        Roster roster = Roster.getInstanceFor(connection);
+
+        if (!roster.isLoaded())
+            try {
+                roster.reloadAndWait();
+            } catch (SmackException.NotLoggedInException e) {
+                e.printStackTrace();
+            } catch (SmackException.NotConnectedException e) {
+                e.printStackTrace();
+            }
+
+        Log.d("roster", String.valueOf(roster.getEntryCount()));
+
+        Collection <RosterEntry> entries = roster.getEntries();
+
+        for (RosterEntry entry : entries)
+            System.out.println("Here: " + entry);
+
         ChatManager chatmanager = ChatManager.getInstanceFor(connection);
-        Chat newChat = chatmanager.createChat("tud1@jabber-server.de");
 
         chatmanager.addChatListener(new ChatManagerListener() {
             @Override
@@ -81,18 +101,19 @@ public class LoginActivity extends ActionBarActivity {
                         Log.d("test:", message.getBody());
                     }
 
-
                 });
             }
 
         });
 
+        Chat newChat = chatmanager.createChat("alice@planetjabber.de");
 
         try {
             newChat.sendMessage("Goodbye World!");
         } catch (SmackException.NotConnectedException e) {
             e.printStackTrace();
         }
+
 
     }
 }

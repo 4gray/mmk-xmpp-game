@@ -6,6 +6,7 @@ import android.widget.TextView;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
+import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
@@ -36,8 +37,12 @@ public class XMPP extends AsyncTask {
         Log.d("password", password);
         Log.d("server", server);
 
+        //SmackConfiguration.DEBUG = true;
+
         // Create the configuration for this new connection
         XMPPTCPConnectionConfiguration.Builder configBuilder = XMPPTCPConnectionConfiguration.builder();
+
+        //configBuilder.setDebuggerEnabled(true);
         configBuilder.setUsernameAndPassword("bob", "S3#fsd24_Fa3");
         configBuilder.setResource("SomeResource");
         configBuilder.setServiceName("planetjabber.de");
