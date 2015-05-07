@@ -16,10 +16,13 @@ import org.jivesoftware.smack.chat.ChatManager;
 import org.jivesoftware.smack.chat.ChatManagerListener;
 import org.jivesoftware.smack.chat.ChatMessageListener;
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.roster.Roster;
+import org.jivesoftware.smack.roster.RosterEntry;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.concurrent.ExecutionException;
 
 /**
@@ -62,7 +65,7 @@ public class XMPP {
 
 
                         //if (message.getBody() == "invite") {
-                            forwardInvitation();
+                            forwardInvitation(message.getBody());
                         //}
 
 
@@ -75,16 +78,37 @@ public class XMPP {
 
     }
 
-    private void forwardInvitation() {
+    private void forwardInvitation(String message) {
         Intent intent = new Intent();
         intent.setClass(this.context, MainActivity.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra("MessageType","invite"); // define different message types
+        intent.putExtra("Message",message); // define different message types
         this.context.startActivity(intent);
     }
 
     public AbstractXMPPConnection getConnection() {
         return this.connection;
+    }
+
+    public Collection<RosterEntry> getRoster() {
+        Roster roster = Roster.getInstanceFor(this.connection);
+
+
+        if (!roster.isLoaded())
+            try {
+                roster.reloadAndWait();
+            } catch (SmackException.NotLoggedInException e) {
+                e.printStackTrace();
+            } catch (SmackException.NotConnectedException e) {
+                e.printStackTrace();
+            }
+
+        Log.d("roster", String.valueOf(roster.getEntryCount()));
+
+        Collection<RosterEntry> entries = roster.getEntries();
+
+
+        return entries;
     }
 
     public class XMPPTask extends AsyncTask {

@@ -18,6 +18,7 @@ import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 
@@ -28,37 +29,16 @@ public class BuddyListActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buddy_list);
 
-        AbstractXMPPConnection connection = new XMPP().getInstance().getConnection();
-        Roster roster = Roster.getInstanceFor(connection);
-
-        Log.d("isConnected: ", String.valueOf(connection.isConnected()));
-
-        if (!roster.isLoaded())
-            try {
-                roster.reloadAndWait();
-            } catch (SmackException.NotLoggedInException e) {
-                e.printStackTrace();
-            } catch (SmackException.NotConnectedException e) {
-                e.printStackTrace();
-            }
-
-        Log.d("roster", String.valueOf(roster.getEntryCount()));
-
-        Collection<RosterEntry> entries = roster.getEntries();
-
-        for (RosterEntry entry : entries)
-            System.out.println("Here: " + entry);
+        // get roster
+        Collection<RosterEntry> entries = XMPP.getInstance().getRoster();
+        ArrayList<RosterEntry> list = new ArrayList<RosterEntry>();
+        list.addAll(entries);
 
         final ListView rosterList = (ListView) findViewById(R.id.listView);
-
-        String[] values = new String[] { "Bob", "Alice" };
-
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
-                android.R.layout.simple_list_item_1, android.R.id.text1, values);
+        RosterAdapter adapter = new RosterAdapter(this, list);
 
         // Assign adapter to ListView
         rosterList.setAdapter(adapter);
-
         rosterList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
@@ -69,11 +49,11 @@ public class BuddyListActivity extends ActionBarActivity {
                 int itemPosition = position;
 
                 // ListView Clicked item value
-                String itemValue = (String) rosterList.getItemAtPosition(position);
+                RosterEntry itemValue = (RosterEntry) rosterList.getItemAtPosition(position);
 
                 // Show Alert
                 Toast.makeText(getApplicationContext(),
-                        "Position :" + itemPosition + "  ListItem : " + itemValue, Toast.LENGTH_LONG)
+                        "Position :" + itemPosition + "  ListItem : " + itemValue.getName(), Toast.LENGTH_LONG)
                         .show();
 
                 // TODO: send invitation

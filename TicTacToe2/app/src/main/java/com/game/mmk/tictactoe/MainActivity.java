@@ -34,9 +34,7 @@ public class MainActivity extends ActionBarActivity {
         Intent intent = getIntent();
 
         // message handler
-        if (intent.getStringExtra("MessageType") == "invite") {
-            Toast.makeText(getApplicationContext(), "You have received invitation", Toast.LENGTH_LONG).show();
-        }
+        Toast.makeText(getApplicationContext(), intent.getStringExtra("Message"), Toast.LENGTH_LONG).show();
     }
 
 
