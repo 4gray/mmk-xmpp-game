@@ -3,5 +3,9 @@
 
     <string name="hello_world">Welcome!</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_login">Please Login</string>
+    <string name="title_activity_buddy_list">My Buddy List</string>
+    <string name="title_app">Tic Tac Toe</string>
+    <string name="main_activity_title">Spiel</string>
+    <string name="game_area">Spielfeld hier</string>
 </resources>

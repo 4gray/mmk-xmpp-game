@@ -1,10 +1,12 @@
 package com.game.mmk.tictactoe;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.ConnectionConfiguration;
@@ -28,6 +30,13 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Intent intent = getIntent();
+
+        // message handler
+        if (intent.getStringExtra("MessageType") == "invite") {
+            Toast.makeText(getApplicationContext(), "You have received invitation", Toast.LENGTH_LONG).show();
+        }
     }
 
 

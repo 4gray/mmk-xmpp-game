@@ -1,84 +1,147 @@
 package com.game.mmk.tictactoe;
 
+import android.app.AlertDialog;
+import android.app.Application;
+import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.TextView;
+import android.widget.Toast;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
-import org.jivesoftware.smack.ConnectionConfiguration;
-import org.jivesoftware.smack.SmackConfiguration;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.chat.Chat;
+import org.jivesoftware.smack.chat.ChatManager;
+import org.jivesoftware.smack.chat.ChatManagerListener;
+import org.jivesoftware.smack.chat.ChatMessageListener;
+import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 
 import java.io.IOException;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by 4gray on 22.04.15.
  */
 
-public class XMPP extends AsyncTask {
+// singleton class with XMPP connection
+public class XMPP {
 
-    public String username;
-    public String password;
-    public String server;
+    private AbstractXMPPConnection connection = null;
+    protected Context context;
 
-    public XMPP(String username, String password, String server) {
-        this.username = username;
-        this.password = password;
-        this.server = server;
+    private static XMPP instance = null;
+
+    // returns XMPP class instance
+    public synchronized static XMPP getInstance() {
+        if(instance==null){
+            instance = new XMPP();
+        }
+        return instance;
     }
 
-    @Override
-    protected Object doInBackground(Object[] params) {
+    public void setConnection(String login, String pass, String server, Context context) throws ExecutionException, InterruptedException {
+        this.connection = (AbstractXMPPConnection) new XMPPTask(login,pass,server).execute().get();
 
-        Log.d("username", username);
-        Log.d("password", password);
-        Log.d("server", server);
+        this.context = context;
 
-        //SmackConfiguration.DEBUG = true;
+        // set message listeners
+        ChatManager chatmanager = ChatManager.getInstanceFor(connection);
 
-        // Create the configuration for this new connection
-        XMPPTCPConnectionConfiguration.Builder configBuilder = XMPPTCPConnectionConfiguration.builder();
+        chatmanager.addChatListener(new ChatManagerListener() {
+            @Override
+            public void chatCreated(Chat chat, boolean createdLocally) {
+                Log.d("chat:", chat.toString());
+                chat.addMessageListener(new ChatMessageListener() {
 
-        //configBuilder.setDebuggerEnabled(true);
-        configBuilder.setUsernameAndPassword("bob", "bob");
-        //configBuilder.setUsernameAndPassword("alice", "alice");
-        configBuilder.setResource("SomeResource");
-        configBuilder.setServiceName("planetjabber.de");
+                    @Override
+                    public void processMessage(Chat chat, Message message) {
+                        Log.d("test:", message.getBody());
 
-        System.setProperty("java.net.preferIPv6Addresses", "false");
 
-        AbstractXMPPConnection connection = new XMPPTCPConnection(configBuilder.build());
-        // Connect to the server
+                        //if (message.getBody() == "invite") {
+                            forwardInvitation();
+                        //}
 
-        try {
-            connection.connect();
-            Log.d("isConnected: ", String.valueOf(connection.isConnected()));
-        } catch (SmackException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (XMPPException e) {
-            e.printStackTrace();
+
+                    }
+
+                });
+            }
+
+        });
+
+    }
+
+    private void forwardInvitation() {
+        Intent intent = new Intent();
+        intent.setClass(this.context, MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.putExtra("MessageType","invite"); // define different message types
+        this.context.startActivity(intent);
+    }
+
+    public AbstractXMPPConnection getConnection() {
+        return this.connection;
+    }
+
+    public class XMPPTask extends AsyncTask {
+
+        public String username;
+        public String password;
+        public String server;
+
+        public XMPPTask(String username, String password, String server) {
+            this.username = username;
+            this.password = password;
+            this.server = server;
         }
 
-        // Log into the server
+        @Override
+        protected Object doInBackground(Object[] params) {
 
-        try {
-            connection.login();
-        } catch (XMPPException e) {
-            e.printStackTrace();
-        } catch (SmackException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+            // create the configuration for this new connection
+            XMPPTCPConnectionConfiguration.Builder configBuilder = XMPPTCPConnectionConfiguration.builder();
+
+            // set connection variables
+            configBuilder.setUsernameAndPassword(username, password);
+            configBuilder.setResource("Android");
+            configBuilder.setServiceName(server);
+
+            // create connection object
+            AbstractXMPPConnection connection = new XMPPTCPConnection(configBuilder.build());
+
+            // connect to the server
+            try {
+                connection.connect();
+            } catch (SmackException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (XMPPException e) {
+                e.printStackTrace();
+            }
+
+            // log into the server
+            try {
+                connection.login();
+            } catch (XMPPException e) {
+                e.printStackTrace();
+            } catch (SmackException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
+            return connection;
         }
 
 
-        return connection;
     }
 
 
 }
+

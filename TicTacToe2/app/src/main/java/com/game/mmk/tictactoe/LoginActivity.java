@@ -1,5 +1,6 @@
 package com.game.mmk.tictactoe;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -9,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.MessageListener;
@@ -62,59 +64,43 @@ public class LoginActivity extends ActionBarActivity {
     }
 
     public void login(View view) throws ExecutionException, InterruptedException {
+
+        // get values from text fields on the UI
         EditText username = (EditText) findViewById(R.id.usernameTxt);
         EditText password= (EditText) findViewById(R.id.passwordTxt);
         EditText server = (EditText) findViewById(R.id.serverTxt);
 
+        // create XMPP connection and get connection object
+        XMPP.getInstance().setConnection(username.getText().toString(), password.getText().toString(), server.getText().toString(), getApplicationContext());
+        AbstractXMPPConnection connection = (AbstractXMPPConnection) new XMPP().getInstance().getConnection();
 
-        AbstractXMPPConnection connection = (AbstractXMPPConnection) new XMPP(username.getText().toString(), password.getText().toString(), server.getText().toString()).execute().get();
+        Log.d("isConnected: ", String.valueOf(connection.isConnected()));
+        if (connection.isConnected() == true) {
+            Toast.makeText(getApplicationContext(), "Connected!", Toast.LENGTH_LONG).show();
 
-        Log.d("returned: ", String.valueOf(connection.isConnected()));
+            //go to buddy list activity
+            Intent intent = new Intent(this, BuddyListActivity.class);
+            startActivity(intent);
+        }
+        else {
+            // TODO: show error
+            Toast.makeText(getApplicationContext(), "Connection problem", Toast.LENGTH_LONG).show();
+        }
 
-        Roster roster = Roster.getInstanceFor(connection);
-
-        if (!roster.isLoaded())
-            try {
-                roster.reloadAndWait();
-            } catch (SmackException.NotLoggedInException e) {
-                e.printStackTrace();
-            } catch (SmackException.NotConnectedException e) {
-                e.printStackTrace();
-            }
-
+        // set presence
+        /*
         Presence presence = new Presence(Presence.Type.unavailable);
+
         presence.setStatus("Gone fishing");
         try {
             connection.sendPacket(presence);
         } catch (SmackException.NotConnectedException e) {
             e.printStackTrace();
         }
+        */
 
-        Log.d("roster", String.valueOf(roster.getEntryCount()));
-
-        Collection <RosterEntry> entries = roster.getEntries();
-
-        for (RosterEntry entry : entries)
-            System.out.println("Here: " + entry);
-
-        ChatManager chatmanager = ChatManager.getInstanceFor(connection);
-
-        chatmanager.addChatListener(new ChatManagerListener() {
-            @Override
-            public void chatCreated(Chat chat, boolean createdLocally) {
-                Log.d("chat:", chat.toString());
-                chat.addMessageListener(new ChatMessageListener() {
-
-                    @Override
-                    public void processMessage(Chat chat, Message message) {
-                        Log.d("test:", message.getBody());
-                    }
-
-                });
-            }
-
-        });
-
+        // create chat and send message
+        /*
         Chat newChat = chatmanager.createChat("alice@planetjabber.de");
 
         try {
@@ -122,6 +108,7 @@ public class LoginActivity extends ActionBarActivity {
         } catch (SmackException.NotConnectedException e) {
             e.printStackTrace();
         }
+        */
 
 
     }
