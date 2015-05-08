@@ -34,7 +34,7 @@ public class XMPP {
 
     private AbstractXMPPConnection connection = null;
     protected Context context;
-
+    private ChatManager chatmanager = null;
     private static XMPP instance = null;
 
     // returns XMPP class instance
@@ -51,7 +51,7 @@ public class XMPP {
         this.context = context;
 
         // set message listeners
-        ChatManager chatmanager = ChatManager.getInstanceFor(connection);
+        chatmanager = ChatManager.getInstanceFor(connection);
 
         chatmanager.addChatListener(new ChatManagerListener() {
             @Override
@@ -65,7 +65,7 @@ public class XMPP {
 
 
                         //if (message.getBody() == "invite") {
-                            forwardInvitation(message.getBody());
+                            forwardMessage(message);
                         //}
 
 
@@ -78,12 +78,19 @@ public class XMPP {
 
     }
 
-    private void forwardInvitation(String message) {
-        Intent intent = new Intent();
-        intent.setClass(this.context, MainActivity.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        intent.putExtra("Message",message); // define different message types
-        this.context.startActivity(intent);
+    public ChatManager getChatmanager() {
+        return chatmanager;
+    }
+
+    private void forwardMessage(Message message) {
+
+        if (message.getSubject().equals("invite")) {
+            Intent intent = new Intent();
+            intent.setClass(this.context, BuddyListActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.putExtra("Message",message.getBody()); // define different message types
+            this.context.startActivity(intent);
+        }
     }
 
     public AbstractXMPPConnection getConnection() {
@@ -109,6 +116,20 @@ public class XMPP {
 
 
         return entries;
+    }
+
+    public void sendMessage(String subject, String body, String receiver) {
+        Chat newChat = chatmanager.createChat(receiver);
+
+        try {
+            Message m = new Message();
+            m.addSubject("",subject);
+            m.addBody("",body);
+
+            newChat.sendMessage(m);
+        } catch (SmackException.NotConnectedException e) {
+            e.printStackTrace();
+        }
     }
 
     public class XMPPTask extends AsyncTask {

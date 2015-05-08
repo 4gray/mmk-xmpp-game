@@ -15,6 +15,9 @@ import android.widget.Toast;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.chat.Chat;
+import org.jivesoftware.smack.chat.ChatManager;
+import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
 
@@ -24,12 +27,15 @@ import java.util.Collection;
 
 public class BuddyListActivity extends ActionBarActivity {
 
+    private ChatManager chatmanager = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buddy_list);
 
         // get roster
+        chatmanager = XMPP.getInstance().getChatmanager();
         Collection<RosterEntry> entries = XMPP.getInstance().getRoster();
         ArrayList<RosterEntry> list = new ArrayList<RosterEntry>();
         list.addAll(entries);
@@ -56,8 +62,7 @@ public class BuddyListActivity extends ActionBarActivity {
                         "Position :" + itemPosition + "  ListItem : " + itemValue.getName(), Toast.LENGTH_LONG)
                         .show();
 
-                // TODO: send invitation
-                sendInvitation();
+                sendInvitation(itemValue.getUser());
 
                 // TODO: show waiting dialog
 
@@ -66,17 +71,21 @@ public class BuddyListActivity extends ActionBarActivity {
             }
 
         });
+
+        Intent intent = getIntent();
+
+        Toast.makeText(getApplicationContext(), intent.getStringExtra("Message"), Toast.LENGTH_LONG).show();
+
     }
 
-    private void sendInvitation() {
-        // create new message - type = invite
+    private void sendInvitation(String name) {
+        XMPP.getInstance().sendMessage("invite","invitation",name);
     }
 
     private void goToGameArea() {
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

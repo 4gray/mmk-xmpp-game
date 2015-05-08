@@ -31,8 +31,7 @@
         android:text="Spielen"
         android:id="@+id/button"
         android:layout_gravity="center_horizontal"
-        android:background="@color/listItem"
-        />
+        android:background="@color/listItem" />
 
     <Button
         android:layout_width="145dp"
