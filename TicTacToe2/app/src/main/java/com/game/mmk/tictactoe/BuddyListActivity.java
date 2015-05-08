@@ -82,7 +82,38 @@ public class BuddyListActivity extends ActionBarActivity {
     protected void onNewIntent(Intent intent) {
         // TODO Auto-generated method stub
         super.onNewIntent(intent);
-        Log.d("WOHOHOHOHO",intent.getExtras().toString());
+        Log.d("WOHOHOHOHO", intent.getExtras().toString());
+
+        TMessage tm = (TMessage) intent.getSerializableExtra("Message");
+
+        String body = tm.getBody();
+        final String from = tm.getFrom();
+
+
+        if (body.equals("invitation")) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Einladung?")
+                    .setPositiveButton("Annehmen", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            XMPP.getInstance().sendMessage("invite", "accept", from);
+                        }
+                    })
+                    .setNegativeButton("Ablehnen", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            XMPP.getInstance().sendMessage("invite", "decline", from);
+                        }
+                    });
+            // Create the AlertDialog object and return it
+            builder.create();
+        } else if (body.equals("accept")) {
+            XMPP.getInstance().sendMessage("invite", "go", from);
+            goToGameArea();
+        } else if (body.equals("go")) {
+            goToGameArea();
+        } else if (body.equals("decline")) {
+            Toast.makeText(getApplicationContext(), "Invitation declined", Toast.LENGTH_LONG).show();
+        }
+
     }
 
     private void sendInvitation(String name) {
