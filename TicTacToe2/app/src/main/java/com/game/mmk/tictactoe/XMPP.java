@@ -99,7 +99,7 @@ public class XMPP {
             } else {
                 Intent intent = new Intent();
                 intent.setClass(this.context, BuddyListActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
                 TMessage tm = new TMessage(message.getSubject(), message.getBody(), message.getFrom());
 
