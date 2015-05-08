@@ -96,6 +96,15 @@ public class XMPP {
 
                 intent.putExtra("Message", tm);
                 this.context.startActivity(intent);
+            } else {
+                Intent intent = new Intent();
+                intent.setClass(this.context, BuddyListActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+
+                TMessage tm = new TMessage(message.getSubject(), message.getBody(), message.getFrom());
+
+                intent.putExtra("Message", tm);
+                this.context.startActivity(intent);
             }
         }
     }
