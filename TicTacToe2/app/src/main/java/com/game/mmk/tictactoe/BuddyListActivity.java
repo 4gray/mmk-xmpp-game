@@ -44,6 +44,7 @@ public class BuddyListActivity extends ActionBarActivity {
         final ListView rosterList = (ListView) findViewById(R.id.listView);
         RosterAdapter adapter = new RosterAdapter(this, list);
 
+
         // Assign adapter to ListView
         rosterList.setAdapter(adapter);
         rosterList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -89,22 +90,25 @@ public class BuddyListActivity extends ActionBarActivity {
         String body = tm.getBody();
         final String from = tm.getFrom();
 
-
         if (body.equals("invitation")) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage("Einladung?")
-                    .setPositiveButton("Annehmen", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
+            new AlertDialog.Builder(this)
+                    .setTitle("Invitation")
+                    .setMessage("Do you want to join the game?")
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+
                             XMPP.getInstance().sendMessage("invite", "accept", from);
+
                         }
                     })
-                    .setNegativeButton("Ablehnen", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
+                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            // do nothing
                             XMPP.getInstance().sendMessage("invite", "decline", from);
                         }
-                    });
-            // Create the AlertDialog object and return it
-            builder.create();
+                    })
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
         } else if (body.equals("accept")) {
             XMPP.getInstance().sendMessage("invite", "go", from);
             goToGameArea();
