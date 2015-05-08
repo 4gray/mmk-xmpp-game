@@ -20,8 +20,10 @@ import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
+import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.ExecutionException;
 
@@ -88,7 +90,12 @@ public class XMPP {
             Intent intent = new Intent();
             intent.setClass(this.context, BuddyListActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.putExtra("Message",message.getBody()); // define different message types
+
+            ArrayList<String> ar = new ArrayList();
+            ar.add(message.getBody());
+            ar.add(message.getFrom());
+
+            intent.putStringArrayListExtra("Message",ar);
             this.context.startActivity(intent);
         }
     }

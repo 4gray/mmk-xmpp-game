@@ -1,6 +1,7 @@
 package com.game.mmk.tictactoe;
 
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -73,8 +74,25 @@ public class BuddyListActivity extends ActionBarActivity {
         });
 
         Intent intent = getIntent();
-
-        Toast.makeText(getApplicationContext(), intent.getStringExtra("Message"), Toast.LENGTH_LONG).show();
+        ArrayList ar = intent.getStringArrayListExtra("Message");
+        String body = (String) ar.get(0);
+        final String from = (String) ar.get(1);
+        if (body.equals("invitation")) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setMessage("Einladung?")
+                    .setPositiveButton("Annehmen", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            XMPP.getInstance().sendMessage("invite","accept",from);
+                        }
+                    })
+                    .setNegativeButton("Ablehnen", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            XMPP.getInstance().sendMessage("invite","decline",from);
+                        }
+                    });
+            // Create the AlertDialog object and return it
+            builder.create();
+        }
 
     }
 
