@@ -95,7 +95,9 @@ public class XMPP {
             ar.add(message.getBody());
             ar.add(message.getFrom());
 
-            intent.putStringArrayListExtra("Message",ar);
+            TMessage tm = new TMessage(message.getSubject(), message.getBody(), message.getFrom());
+
+            intent.putExtra("Message", tm);
             this.context.startActivity(intent);
         }
     }
@@ -129,6 +131,7 @@ public class XMPP {
         Chat newChat = chatmanager.createChat(receiver);
 
         try {
+            TMessage tm = new TMessage(subject, body, receiver);
             Message m = new Message();
             m.addSubject("",subject);
             m.addBody("",body);

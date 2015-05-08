@@ -73,25 +73,33 @@ public class BuddyListActivity extends ActionBarActivity {
 
         });
 
+
         Intent intent = getIntent();
-        ArrayList ar = intent.getStringArrayListExtra("Message");
-        String body = (String) ar.get(0);
-        final String from = (String) ar.get(1);
-        if (body.equals("invitation")) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setMessage("Einladung?")
-                    .setPositiveButton("Annehmen", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            XMPP.getInstance().sendMessage("invite","accept",from);
-                        }
-                    })
-                    .setNegativeButton("Ablehnen", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            XMPP.getInstance().sendMessage("invite","decline",from);
-                        }
-                    });
-            // Create the AlertDialog object and return it
-            builder.create();
+
+        if (intent.getExtras() != null) {
+
+            TMessage tm = (TMessage) intent.getSerializableExtra("Message");
+
+            String body = tm.getBody();
+            final String from = tm.getFrom();
+
+            if (body.equals("invitation")) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setMessage("Einladung?")
+                        .setPositiveButton("Annehmen", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                XMPP.getInstance().sendMessage("invite", "accept", from);
+                            }
+                        })
+                        .setNegativeButton("Ablehnen", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                XMPP.getInstance().sendMessage("invite", "decline", from);
+                            }
+                        });
+                // Create the AlertDialog object and return it
+                builder.create();
+            }
+
         }
 
     }
