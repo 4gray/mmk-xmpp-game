@@ -87,25 +87,16 @@ public class XMPP {
     private void forwardMessage(Message message) {
 
         if (message.getSubject().equals("invite")) {
-            if (message.getBody().equals("invitation")) {
-                Intent intent = new Intent();
-                intent.setClass(this.context, InviteActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-                TMessage tm = new TMessage(message.getSubject(), message.getBody(), message.getFrom());
+            Intent intent = new Intent();
+            intent.setClass(this.context, BuddyListActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
-                intent.putExtra("Message", tm);
-                this.context.startActivity(intent);
-            } else {
-                Intent intent = new Intent();
-                intent.setClass(this.context, BuddyListActivity.class);
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            TMessage tm = new TMessage(message.getSubject(), message.getBody(), message.getFrom());
 
-                TMessage tm = new TMessage(message.getSubject(), message.getBody(), message.getFrom());
+            intent.putExtra("Message", tm);
+            this.context.startActivity(intent);
 
-                intent.putExtra("Message", tm);
-                this.context.startActivity(intent);
-            }
         }
     }
 
