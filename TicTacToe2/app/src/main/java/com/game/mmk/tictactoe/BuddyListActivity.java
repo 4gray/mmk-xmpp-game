@@ -78,6 +78,13 @@ public class BuddyListActivity extends ActionBarActivity {
 
     }
 
+    @Override
+    protected void onNewIntent(Intent intent) {
+        // TODO Auto-generated method stub
+        super.onNewIntent(intent);
+        Log.d("WOHOHOHOHO",intent.getExtras().toString());
+    }
+
     private void sendInvitation(String name) {
         XMPP.getInstance().sendMessage("invite","invitation",name);
     }
