@@ -68,39 +68,21 @@ public class BuddyListActivity extends ActionBarActivity {
                 // TODO: show waiting dialog
 
                 //open game activity
-                goToGameArea();
+                //goToGameArea();
             }
 
         });
 
 
-        Intent intent = getIntent();
-        if (intent.getExtras() != null) {
 
-            TMessage tm = (TMessage) intent.getSerializableExtra("Message");
 
-            String body = tm.getBody();
-            final String from = tm.getFrom();
-            Log.d("test",body);
-            if (body.equals("invitation")) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setMessage("Einladung?")
-                        .setPositiveButton("Annehmen", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                XMPP.getInstance().sendMessage("invite", "accept", from);
-                            }
-                        })
-                        .setNegativeButton("Ablehnen", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-                                XMPP.getInstance().sendMessage("invite", "decline", from);
-                            }
-                        });
-                // Create the AlertDialog object and return it
-                builder.create();
-            }
+    }
 
-        }
-
+    @Override
+    protected void onNewIntent(Intent intent) {
+        // TODO Auto-generated method stub
+        super.onNewIntent(intent);
+        Log.d("TEST",intent.getExtras().toString());
     }
 
     private void sendInvitation(String name) {
