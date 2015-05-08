@@ -8,4 +8,5 @@
     <string name="title_app">Tic Tac Toe</string>
     <string name="main_activity_title">Spiel</string>
     <string name="game_area">Spielfeld hier</string>
+    <string name="title_activity_invite">InviteActivity</string>
 </resources>

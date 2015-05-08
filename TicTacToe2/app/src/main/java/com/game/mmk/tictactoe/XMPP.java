@@ -88,12 +88,8 @@ public class XMPP {
 
         if (message.getSubject().equals("invite")) {
             Intent intent = new Intent();
-            intent.setClass(this.context, BuddyListActivity.class);
+            intent.setClass(this.context, InviteActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-            ArrayList<String> ar = new ArrayList();
-            ar.add(message.getBody());
-            ar.add(message.getFrom());
 
             TMessage tm = new TMessage(message.getSubject(), message.getBody(), message.getFrom());
 

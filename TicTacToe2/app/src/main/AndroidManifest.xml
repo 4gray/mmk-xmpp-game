@@ -39,10 +39,13 @@
             android:name=".BuddyListActivity"
             android:label="@string/title_activity_buddy_list" >
         </activity>
-
         <activity
             android:name=".MainActivity"
             android:label="@string/main_activity_title" >
+        </activity>
+        <activity
+            android:name=".InviteActivity"
+            android:label="@string/title_activity_invite" >
         </activity>
     </application>
 

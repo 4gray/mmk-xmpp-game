@@ -75,14 +75,13 @@ public class BuddyListActivity extends ActionBarActivity {
 
 
         Intent intent = getIntent();
-
         if (intent.getExtras() != null) {
 
             TMessage tm = (TMessage) intent.getSerializableExtra("Message");
 
             String body = tm.getBody();
             final String from = tm.getFrom();
-
+            Log.d("test",body);
             if (body.equals("invitation")) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setMessage("Einladung?")
