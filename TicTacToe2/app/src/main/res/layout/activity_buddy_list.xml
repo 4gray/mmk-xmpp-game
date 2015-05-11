@@ -15,12 +15,11 @@
         android:layout_height="wrap_content"
         android:id="@+id/imageView"
         android:layout_gravity="center_horizontal"
-        android:src="@drawable/common_ic_googleplayservices"
-        android:layout_weight="0.66" />
+        android:src="@drawable/logo_2" />
 
     <ListView
         android:layout_width="wrap_content"
-        android:layout_height="285dp"
+        android:layout_height="249dp"
         android:id="@+id/listView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />

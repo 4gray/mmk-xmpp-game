@@ -16,6 +16,7 @@ import org.jivesoftware.smack.chat.ChatManager;
 import org.jivesoftware.smack.chat.ChatManagerListener;
 import org.jivesoftware.smack.chat.ChatMessageListener;
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
@@ -97,6 +98,23 @@ public class XMPP {
             intent.putExtra("Message", tm);
             this.context.startActivity(intent);
 
+        }
+    }
+
+    public void changePresence(String type) {
+        Presence presence = null;
+        if (type.equals("available")) {
+            presence = new Presence(Presence.Type.available);
+            presence.setStatus("Ready");
+        } else if (type.equals("unavailable")) {
+            presence = new Presence(Presence.Type.unavailable);
+            presence.setStatus("In game");
+        }
+
+        try {
+            connection.sendPacket(presence);
+        } catch (SmackException.NotConnectedException e) {
+            e.printStackTrace();
         }
     }
 

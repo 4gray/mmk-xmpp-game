@@ -77,7 +77,7 @@ public class LoginActivity extends ActionBarActivity {
         Log.d("isConnected: ", String.valueOf(connection.isConnected()));
         if (connection.isConnected() == true) {
             Toast.makeText(getApplicationContext(), "Connected!", Toast.LENGTH_LONG).show();
-
+            //XMPP.getInstance().changePresence("availabe");
             //go to buddy list activity
             Intent intent = new Intent(this, BuddyListActivity.class);
             startActivity(intent);

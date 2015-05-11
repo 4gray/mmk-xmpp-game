@@ -1,6 +1,7 @@
 package com.game.mmk.tictactoe;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
@@ -24,16 +25,20 @@ import org.jivesoftware.smack.roster.RosterEntry;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Timer;
 
 
 public class BuddyListActivity extends ActionBarActivity {
 
     private ChatManager chatmanager = null;
+    AlertDialog.Builder builder = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_buddy_list);
+
+        builder = new AlertDialog.Builder(this);
 
         // get roster
         chatmanager = XMPP.getInstance().getChatmanager();
@@ -64,12 +69,8 @@ public class BuddyListActivity extends ActionBarActivity {
                         "Position :" + itemPosition + "  ListItem : " + itemValue.getName(), Toast.LENGTH_LONG)
                         .show();
 
+                //if (itemValue.getStatus() != null && !itemValue.getStatus().toString().equals("unavilable")) {
                 sendInvitation(itemValue.getUser());
-
-                // TODO: show waiting dialog
-
-                //open game activity
-                //goToGameArea();
             }
 
         });
@@ -81,9 +82,7 @@ public class BuddyListActivity extends ActionBarActivity {
 
     @Override
     protected void onNewIntent(Intent intent) {
-        // TODO Auto-generated method stub
         super.onNewIntent(intent);
-        Log.d("WOHOHOHOHO", intent.getExtras().toString());
 
         TMessage tm = (TMessage) intent.getSerializableExtra("Message");
 
@@ -91,19 +90,16 @@ public class BuddyListActivity extends ActionBarActivity {
         final String from = tm.getFrom();
 
         if (body.equals("invitation")) {
-            new AlertDialog.Builder(this)
+            builder
                     .setTitle("Invitation")
                     .setMessage("Do you want to join the game?")
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-
                             XMPP.getInstance().sendMessage("invite", "accept", from);
-
                         }
                     })
                     .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
-                            // do nothing
                             XMPP.getInstance().sendMessage("invite", "decline", from);
                         }
                     })
@@ -121,10 +117,16 @@ public class BuddyListActivity extends ActionBarActivity {
     }
 
     private void sendInvitation(String name) {
-        XMPP.getInstance().sendMessage("invite","invitation",name);
+        XMPP.getInstance().sendMessage("invite", "invitation", name);
+        builder
+                .setTitle("Invitation")
+                .setMessage("Waiting for opponent answer.")
+                .show();
+        //todo initiate timeout
     }
 
     private void goToGameArea() {
+        //XMPP.getInstance().changePresence("unavailable");
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
