@@ -1,12 +1,9 @@
 package com.game.mmk.tictactoe;
 
-import android.app.AlertDialog;
-import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.SmackException;
@@ -21,10 +18,8 @@ import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
-import org.json.JSONObject;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.ExecutionException;
 
@@ -39,6 +34,7 @@ public class XMPP {
     protected Context context;
     private ChatManager chatmanager = null;
     private static XMPP instance = null;
+    private String gameOpponent = null;
 
     // returns XMPP class instance
     public synchronized static XMPP getInstance() {
@@ -59,22 +55,15 @@ public class XMPP {
         chatmanager.addChatListener(new ChatManagerListener() {
             @Override
             public void chatCreated(Chat chat, boolean createdLocally) {
-                Log.d("chat:", chat.toString());
-                chat.addMessageListener(new ChatMessageListener() {
+            Log.d("chat:", chat.toString());
+            chat.addMessageListener(new ChatMessageListener() {
 
-                    @Override
-                    public void processMessage(Chat chat, Message message) {
-                        Log.d("test:", message.getBody());
+                @Override
+                public void processMessage(Chat chat, Message message) {
+                 forwardMessage(message);
+                }
 
-
-                        //if (message.getBody() == "invite") {
-                            forwardMessage(message);
-                        //}
-
-
-                    }
-
-                });
+            });
             }
 
         });
@@ -98,6 +87,16 @@ public class XMPP {
             intent.putExtra("Message", tm);
             this.context.startActivity(intent);
 
+        }
+        else if (message.getSubject().equals("game")) {
+            Intent intent = new Intent();
+            intent.setClass(this.context, MainActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+            TMessage tm = new TMessage(message.getSubject(), message.getBody(), message.getFrom());
+
+            intent.putExtra("Message", tm);
+            this.context.startActivity(intent);
         }
     }
 
@@ -147,7 +146,6 @@ public class XMPP {
         Chat newChat = chatmanager.createChat(receiver);
 
         try {
-            TMessage tm = new TMessage(subject, body, receiver);
             Message m = new Message();
             m.addSubject("",subject);
             m.addBody("",body);
@@ -156,6 +154,15 @@ public class XMPP {
         } catch (SmackException.NotConnectedException e) {
             e.printStackTrace();
         }
+    }
+
+
+    public void setGameOpponent(String from) {
+        this.gameOpponent = from;
+    }
+
+    public String getGameOpponent() {
+        return this.gameOpponent;
     }
 
     public class XMPPTask extends AsyncTask {

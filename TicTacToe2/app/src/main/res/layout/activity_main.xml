@@ -4,89 +4,146 @@
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
     android:paddingBottom="@dimen/activity_vertical_margin" tools:context=".MainActivity"
-    android:background="@color/background_color">
+    android:background="@color/background_color" android:id="@+id/gameLayout">
 
-    <TextView android:text="@string/game_area" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" android:textColor="@color/listItem"
-        android:id="@+id/textView" />
 
-    <Button
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="0 0"
+        android:id="@+id/imageView2"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/game_bg"
+        android:layout_above="@+id/button3" />
+
+
+    <ImageButton
+        android:layout_width="90dp"
+        android:layout_height="100dp"
         android:id="@+id/button00"
         android:layout_alignTop="@+id/button01"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:tag="00"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:onClick="gameTurn"
+        android:background="@color/background_color"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="0 1"
+    <ImageButton
+        android:layout_width="90dp"
+        android:layout_height="100dp"
         android:id="@+id/button01"
         android:layout_below="@+id/textView"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="49dp" />
+        android:tag="01"
+        android:layout_marginTop="40dp"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:onClick="gameTurn"
+        android:background="@color/background_color"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="0 2"
+    <ImageButton
+        android:layout_width="90dp"
+        android:layout_height="100dp"
         android:id="@+id/button02"
         android:layout_alignTop="@+id/button01"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:tag="02"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:onClick="gameTurn"
+        android:background="@color/background_color"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="1 0"
+    <ImageButton
+        android:layout_width="90dp"
+        android:layout_height="100dp"
         android:id="@+id/button10"
         android:layout_below="@+id/button00"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:onClick="gameTurn"
+        android:layout_marginTop="60dp"
+        android:tag="10"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:background="@color/background_color"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="1 1"
+    <ImageButton
+        android:layout_width="90dp"
+        android:layout_height="100dp"
         android:id="@+id/button11"
         android:layout_below="@+id/button01"
         android:layout_alignLeft="@+id/button01"
-        android:layout_alignStart="@+id/button01" />
+        android:layout_alignStart="@+id/button01"
+        android:onClick="gameTurn"
+        android:layout_marginTop="60dp"
+        android:tag="11"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:background="@color/background_color"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="1 2"
+    <ImageButton
+        android:layout_width="90dp"
+        android:layout_height="100dp"
         android:id="@+id/button12"
         android:layout_below="@+id/button02"
         android:layout_alignLeft="@+id/button02"
-        android:layout_alignStart="@+id/button02" />
+        android:layout_alignStart="@+id/button02"
+        android:onClick="gameTurn"
+        android:layout_marginTop="60dp"
+        android:tag="12"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:background="@color/background_color"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="2 0"
+    <ImageButton
+        android:layout_width="90dp"
+        android:layout_height="100dp"
         android:id="@+id/button20"
         android:layout_below="@+id/button11"
-        android:layout_alignParentLeft="true" />
+        android:layout_alignParentLeft="true"
+        android:onClick="gameTurn"
+        android:layout_marginTop="60dp"
+        android:tag="20"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:background="@color/background_color"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="2 1"
+    <ImageButton
+        android:layout_width="90dp"
+        android:layout_height="100dp"
         android:id="@+id/button21"
         android:layout_below="@+id/button11"
-        android:layout_alignLeft="@id/button11" />
+        android:layout_alignLeft="@id/button11"
+        android:onClick="gameTurn"
+        android:layout_marginTop="60dp"
+        android:tag="21"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:background="@color/background_color"/>
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="2 2"
+    <ImageButton
+        android:layout_width="90dp"
+        android:layout_height="100dp"
         android:id="@+id/button22"
         android:layout_below="@+id/button12"
         android:layout_alignLeft="@+id/button12"
-        android:layout_alignStart="@+id/button12" />
+        android:layout_alignStart="@+id/button12"
+        android:onClick="gameTurn"
+        android:layout_marginTop="60dp"
+        android:tag="22"
+        android:scaleType="fitCenter"
+        android:adjustViewBounds="true"
+        android:background="@color/background_color"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Spiel aufgeben"
+        android:id="@+id/button3"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true" />
+
 
 </RelativeLayout>

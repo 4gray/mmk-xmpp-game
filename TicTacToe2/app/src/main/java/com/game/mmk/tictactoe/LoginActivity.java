@@ -34,6 +34,10 @@ import java.util.concurrent.ExecutionException;
 
 public class LoginActivity extends ActionBarActivity {
 
+    EditText _username = null;
+    EditText _password= null;
+    EditText _server = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,12 +70,12 @@ public class LoginActivity extends ActionBarActivity {
     public void login(View view) throws ExecutionException, InterruptedException {
 
         // get values from text fields on the UI
-        EditText username = (EditText) findViewById(R.id.usernameTxt);
-        EditText password= (EditText) findViewById(R.id.passwordTxt);
-        EditText server = (EditText) findViewById(R.id.serverTxt);
+        _username = (EditText) findViewById(R.id.usernameTxt);
+        _password= (EditText) findViewById(R.id.passwordTxt);
+        _server = (EditText) findViewById(R.id.serverTxt);
 
         // create XMPP connection and get connection object
-        XMPP.getInstance().setConnection(username.getText().toString(), password.getText().toString(), server.getText().toString(), getApplicationContext());
+        XMPP.getInstance().setConnection(_username.getText().toString(), _password.getText().toString(), _server.getText().toString(), getApplicationContext());
         AbstractXMPPConnection connection = (AbstractXMPPConnection) new XMPP().getInstance().getConnection();
 
         Log.d("isConnected: ", String.valueOf(connection.isConnected()));
@@ -110,6 +114,33 @@ public class LoginActivity extends ActionBarActivity {
         }
         */
 
+
+    }
+
+
+    // for faster debug only
+    public void loginAsUser(View view) throws ExecutionException, InterruptedException {
+
+        if (view.getTag().equals("bob")) {
+            XMPP.getInstance().setConnection("bob_tud", "bob", "jwchat.org", getApplicationContext());
+        }
+        else {
+            XMPP.getInstance().setConnection("alice_tud", "alice", "jwchat.org", getApplicationContext());
+        }
+
+        AbstractXMPPConnection connection = (AbstractXMPPConnection) new XMPP().getInstance().getConnection();
+
+        Log.d("isConnected: ", String.valueOf(connection.isConnected()));
+        if (connection.isConnected() == true) {
+            Toast.makeText(getApplicationContext(), "Connected!", Toast.LENGTH_LONG).show();
+            //XMPP.getInstance().changePresence("availabe");
+            //go to buddy list activity
+            Intent intent = new Intent(this, BuddyListActivity.class);
+            startActivity(intent);
+        } else {
+            // TODO: show error
+            Toast.makeText(getApplicationContext(), "Connection problem", Toast.LENGTH_LONG).show();
+        }
 
     }
 }

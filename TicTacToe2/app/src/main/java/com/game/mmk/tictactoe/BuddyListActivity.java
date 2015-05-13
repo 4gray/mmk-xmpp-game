@@ -1,31 +1,22 @@
 package com.game.mmk.tictactoe;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import org.jivesoftware.smack.AbstractXMPPConnection;
-import org.jivesoftware.smack.SmackException;
-import org.jivesoftware.smack.chat.Chat;
 import org.jivesoftware.smack.chat.ChatManager;
-import org.jivesoftware.smack.packet.Message;
-import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Timer;
 
 
 public class BuddyListActivity extends ActionBarActivity {
@@ -41,7 +32,7 @@ public class BuddyListActivity extends ActionBarActivity {
         builder = new AlertDialog.Builder(this);
 
         // get roster
-        chatmanager = XMPP.getInstance().getChatmanager();
+        this.chatmanager = XMPP.getInstance().getChatmanager();
         Collection<RosterEntry> entries = XMPP.getInstance().getRoster();
         ArrayList<RosterEntry> list = new ArrayList<RosterEntry>();
         list.addAll(entries);
@@ -107,8 +98,10 @@ public class BuddyListActivity extends ActionBarActivity {
                     .show();
         } else if (body.equals("accept")) {
             XMPP.getInstance().sendMessage("invite", "go", from);
+            XMPP.getInstance().setGameOpponent(from);
             goToGameArea();
         } else if (body.equals("go")) {
+            XMPP.getInstance().setGameOpponent(from);
             goToGameArea();
         } else if (body.equals("decline")) {
             Toast.makeText(getApplicationContext(), "Invitation declined", Toast.LENGTH_LONG).show();
@@ -116,7 +109,9 @@ public class BuddyListActivity extends ActionBarActivity {
 
     }
 
+
     private void sendInvitation(String name) {
+        XMPP.getInstance().setGameOpponent(name);
         XMPP.getInstance().sendMessage("invite", "invitation", name);
         builder
                 .setTitle("Invitation")
