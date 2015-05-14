@@ -11,7 +11,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
@@ -33,9 +35,11 @@ import java.util.ArrayList;
 
 public class MainActivity extends ActionBarActivity {
 
-    Turn _turn = null;
+    String _coordinate = null;
     RelativeLayout _layout = null;
     String _gameOpponent = null;
+    ImageView _turnIndicatorImg = null;
+    TextView _turnIndicator = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +47,8 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
 
         _layout = (RelativeLayout) findViewById(R.id.gameLayout);
+        _turnIndicator = (TextView) findViewById(R.id.turnIndicator);
+        _turnIndicatorImg = (ImageView) findViewById(R.id.turnIndicatorImg);
     }
 
 
@@ -70,48 +76,48 @@ public class MainActivity extends ActionBarActivity {
             unlockUI();
 
             switch (body) {
-                case "00":
-                    imgBtn = (ImageButton) findViewById(R.id.button00);
+                case "0":
+                    imgBtn = (ImageButton) findViewById(R.id.button0);
                     imgBtn.setImageResource(R.drawable.x1);
                     imgBtn.setEnabled(false);
                     break;
-                case "01":
-                    imgBtn = (ImageButton) findViewById(R.id.button01);
+                case "1":
+                    imgBtn = (ImageButton) findViewById(R.id.button1);
                     imgBtn.setImageResource(R.drawable.x1);
                     imgBtn.setEnabled(false);
                     break;
-                case "02":
-                    imgBtn = (ImageButton) findViewById(R.id.button02);
+                case "2":
+                    imgBtn = (ImageButton) findViewById(R.id.button2);
                     imgBtn.setImageResource(R.drawable.x1);
                     imgBtn.setEnabled(false);
                     break;
-                case "10":
-                    imgBtn = (ImageButton) findViewById(R.id.button10);
+                case "3":
+                    imgBtn = (ImageButton) findViewById(R.id.button3);
                     imgBtn.setImageResource(R.drawable.x1);
                     imgBtn.setEnabled(false);
                     break;
-                case "11":
-                    imgBtn = (ImageButton) findViewById(R.id.button11);
+                case "4":
+                    imgBtn = (ImageButton) findViewById(R.id.button4);
                     imgBtn.setImageResource(R.drawable.x1);
                     imgBtn.setEnabled(false);
                     break;
-                case "12":
-                    imgBtn = (ImageButton) findViewById(R.id.button12);
+                case "5":
+                    imgBtn = (ImageButton) findViewById(R.id.button5);
                     imgBtn.setImageResource(R.drawable.x1);
                     imgBtn.setEnabled(false);
                     break;
-                case "20":
-                    imgBtn = (ImageButton) findViewById(R.id.button20);
+                case "6":
+                    imgBtn = (ImageButton) findViewById(R.id.button6);
                     imgBtn.setImageResource(R.drawable.x1);
                     imgBtn.setEnabled(false);
                     break;
-                case "21":
-                    imgBtn = (ImageButton) findViewById(R.id.button21);
+                case "7":
+                    imgBtn = (ImageButton) findViewById(R.id.button7);
                     imgBtn.setImageResource(R.drawable.x1);
                     imgBtn.setEnabled(false);
                     break;
-                case "22":
-                    imgBtn = (ImageButton) findViewById(R.id.button22);
+                case "8":
+                    imgBtn = (ImageButton) findViewById(R.id.button8);
                     imgBtn.setImageResource(R.drawable.x1);
                     imgBtn.setEnabled(false);
                     break;
@@ -145,46 +151,54 @@ public class MainActivity extends ActionBarActivity {
     // tic or tac click
     public void gameTurn(View view) {
         // get field coordinates from clicked button
-        _turn = new Turn(view.getTag().toString());
+        _coordinate = view.getTag().toString();
 
         // get game opponent
         _gameOpponent = XMPP.getInstance().getGameOpponent();
 
         // send message with you game turn
-        XMPP.getInstance().sendMessage("game", _turn.toString(), _gameOpponent); // TODO: implement global function getGamePartner()
+        XMPP.getInstance().sendMessage("game", _coordinate, _gameOpponent);
 
         ImageButton btn = (ImageButton) findViewById(view.getId());
         btn.setImageResource(R.drawable.circle1);
         btn.setEnabled(false);
 
-        // block UI after my turn and wwait for opponent
+        // block UI after my turn and wait for opponent
         blockUI();
+
+        //call gameLogic
+
+        Boolean gameDecision = GameLogic.getInstance().play(Integer.parseInt(_coordinate));
+        if (gameDecision == true) {
+            Toast.makeText(getApplicationContext(), "WIN!!!!", Toast.LENGTH_LONG).show();
+        }
+
+
     }
 
+    //lockUI() - lock my UI and unlock opponent UI, if opponent turn
     public void blockUI() {
         for (int i = 0; i < _layout.getChildCount(); i++) {
             View child = _layout.getChildAt(i);
             child.setEnabled(false);
         }
-        Toast.makeText(getApplicationContext(), "UI was blocked. Waiting for opponent turn.", Toast.LENGTH_SHORT).show();
+        _turnIndicator.setText("Gegner ist dran");
+        _turnIndicatorImg.setImageResource(R.drawable.x1);
+        //Toast.makeText(getApplicationContext(), "UI was blocked. Waiting for opponent turn.", Toast.LENGTH_SHORT).show();
     }
 
+    //unlockUI - unlock my UI and lock opponent UI, if my turn
     public void unlockUI() {
         for (int i = 0; i < _layout.getChildCount(); i++) {
             View child = _layout.getChildAt(i);
             child.setEnabled(true);
         }
-        Toast.makeText(getApplicationContext(), "UI was unlocked. Now it's your turn.", Toast.LENGTH_SHORT).show();
+        _turnIndicator.setText("Du bist dran");
+        _turnIndicatorImg.setImageResource(R.drawable.circle1);
+        //Toast.makeText(getApplicationContext(), "UI was unlocked. Now it's your turn.", Toast.LENGTH_SHORT).show();
     }
 
-    //initGame() - clear array and set all btns to enabled
-
-    //lockUI() - lock my UI and unlock opponent UI, if opponent turn
-
-
-    //unlockUI - unlock my UI and lock opponent UI, if my turn
-
-
-    //who start with first turn
+    // initGame() - clear array and set all btns to enabled
+    // set person who start with first turn
 
 }
