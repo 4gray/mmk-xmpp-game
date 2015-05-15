@@ -35,6 +35,8 @@ public class XMPP {
     private ChatManager chatmanager = null;
     private static XMPP instance = null;
     private String gameOpponent = null;
+    private String login = null;
+    private String starter = null;
 
     // returns XMPP class instance
     public synchronized static XMPP getInstance() {
@@ -46,6 +48,8 @@ public class XMPP {
 
     public void setConnection(String login, String pass, String server, Context context) throws ExecutionException, InterruptedException {
         this.connection = (AbstractXMPPConnection) new XMPPTask(login,pass,server).execute().get();
+
+        setUserLogin(login);
 
         this.context = context;
 
@@ -124,7 +128,6 @@ public class XMPP {
     public Collection<RosterEntry> getRoster() {
         Roster roster = Roster.getInstanceFor(this.connection);
 
-
         if (!roster.isLoaded())
             try {
                 roster.reloadAndWait();
@@ -154,6 +157,26 @@ public class XMPP {
         } catch (SmackException.NotConnectedException e) {
             e.printStackTrace();
         }
+    }
+
+    public void disconnect() {
+        this.connection.disconnect();
+    }
+
+    public void setUserLogin(String login) {
+        this.login = login;
+    }
+
+    public String getUserLogin() {
+        return login;
+    }
+
+    public void setStarter(String starter) {
+        this.starter = starter;
+    }
+
+    public String getStarter() {
+        return starter;
     }
 
 

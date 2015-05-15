@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,7 +23,9 @@ import java.util.Collection;
 public class BuddyListActivity extends ActionBarActivity {
 
     private ChatManager chatmanager = null;
-    AlertDialog.Builder builder = null;
+    private AlertDialog.Builder builder = null;
+    private String userLogin = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +33,9 @@ public class BuddyListActivity extends ActionBarActivity {
         setContentView(R.layout.activity_buddy_list);
 
         builder = new AlertDialog.Builder(this);
+        userLogin = XMPP.getInstance().getUserLogin();
+
+        setTitle(userLogin + "'s buddy list");
 
         // get roster
         this.chatmanager = XMPP.getInstance().getChatmanager();
@@ -49,18 +55,9 @@ public class BuddyListActivity extends ActionBarActivity {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
 
-                // ListView Clicked item index
-                int itemPosition = position;
-
                 // ListView Clicked item value
                 RosterEntry itemValue = (RosterEntry) rosterList.getItemAtPosition(position);
 
-                // Show Alert
-                Toast.makeText(getApplicationContext(),
-                        "Position :" + itemPosition + "  ListItem : " + itemValue.getName(), Toast.LENGTH_LONG)
-                        .show();
-
-                //if (itemValue.getStatus() != null && !itemValue.getStatus().toString().equals("unavilable")) {
                 sendInvitation(itemValue.getUser());
             }
 
@@ -99,11 +96,13 @@ public class BuddyListActivity extends ActionBarActivity {
         } else if (body.equals("accept")) {
             XMPP.getInstance().sendMessage("invite", "go", from);
             XMPP.getInstance().setGameOpponent(from);
+            XMPP.getInstance().setStarter(from);
             goToGameArea();
         } else if (body.equals("go")) {
             XMPP.getInstance().setGameOpponent(from);
             goToGameArea();
         } else if (body.equals("decline")) {
+            // TODO
             Toast.makeText(getApplicationContext(), "Invitation declined", Toast.LENGTH_LONG).show();
         }
 
@@ -141,10 +140,26 @@ public class BuddyListActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_logout) {
+            //disconnect
+            XMPP.getInstance().disconnect();
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+
+
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            //do whatever you need for the hardware 'back' button
+            Toast.makeText(getApplicationContext(), "Back clicked", Toast.LENGTH_LONG).show();
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 }

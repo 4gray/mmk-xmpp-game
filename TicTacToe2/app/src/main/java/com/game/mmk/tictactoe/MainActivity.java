@@ -1,5 +1,7 @@
 package com.game.mmk.tictactoe;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -35,11 +37,16 @@ import java.util.ArrayList;
 
 public class MainActivity extends ActionBarActivity {
 
-    String _coordinate = null;
-    RelativeLayout _layout = null;
-    String _gameOpponent = null;
-    ImageView _turnIndicatorImg = null;
-    TextView _turnIndicator = null;
+    private String _coordinate = null;
+    private RelativeLayout _layout = null;
+    private String _gameOpponent = null;
+    private ImageView _turnIndicatorImg = null;
+    private TextView _turnIndicator = null;
+    private TMessage _tmessage = null;
+    private ImageButton imgBtn = null;
+    private Boolean _gameDecision = null;
+    private AlertDialog.Builder builder = null;
+    private String _starter = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +56,30 @@ public class MainActivity extends ActionBarActivity {
         _layout = (RelativeLayout) findViewById(R.id.gameLayout);
         _turnIndicator = (TextView) findViewById(R.id.turnIndicator);
         _turnIndicatorImg = (ImageView) findViewById(R.id.turnIndicatorImg);
+
+        builder = new AlertDialog.Builder(this);
+
+        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+               goToBuddyList();
+            }
+        });
+
+        _starter = XMPP.getInstance().getStarter();
+
+        // get game opponent
+        _gameOpponent = XMPP.getInstance().getGameOpponent();
+
+        if (_starter == _gameOpponent) {
+            blockUI();
+        }
     }
 
+    public void goToBuddyList() {
+        Intent intent = new Intent(this, BuddyListActivity.class);
+        startActivity(intent);
+    }
 
     @Override
     protected void onNewIntent(Intent intent) {
@@ -59,23 +88,17 @@ public class MainActivity extends ActionBarActivity {
         // listen for intents with game turns
         // message handler
 
-        TMessage tm = (TMessage) intent.getSerializableExtra("Message");
-
-        String body = tm.getBody();
-        String from = tm.getFrom();
-        String subject = tm.getSubject();
-
-        ImageButton imgBtn = null;
+        _tmessage = (TMessage) intent.getSerializableExtra("Message");
 
         //Toast.makeText(getApplicationContext(), body, Toast.LENGTH_LONG).show();
 
-        // TODO: accept only game turns ignore all other messages
-        if (subject.equals("game")) {
+        // TODO: accept only game turns, ignore all other messages
+        if (_tmessage.getSubject().equals("game")) {
 
             // unlock UI
             unlockUI();
 
-            switch (body) {
+            switch (_tmessage.getBody()) {
                 case "0":
                     imgBtn = (ImageButton) findViewById(R.id.button0);
                     imgBtn.setImageResource(R.drawable.x1);
@@ -121,6 +144,14 @@ public class MainActivity extends ActionBarActivity {
                     imgBtn.setImageResource(R.drawable.x1);
                     imgBtn.setEnabled(false);
                     break;
+                case "lose":
+                    builder.setTitle("Ohhh")
+                        .setMessage("You lose!")
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                    GameLogic.getInstance().initNewGame();
+
+                    break;
             }
         }
     }
@@ -153,9 +184,6 @@ public class MainActivity extends ActionBarActivity {
         // get field coordinates from clicked button
         _coordinate = view.getTag().toString();
 
-        // get game opponent
-        _gameOpponent = XMPP.getInstance().getGameOpponent();
-
         // send message with you game turn
         XMPP.getInstance().sendMessage("game", _coordinate, _gameOpponent);
 
@@ -167,10 +195,15 @@ public class MainActivity extends ActionBarActivity {
         blockUI();
 
         //call gameLogic
-
-        Boolean gameDecision = GameLogic.getInstance().play(Integer.parseInt(_coordinate));
-        if (gameDecision == true) {
-            Toast.makeText(getApplicationContext(), "WIN!!!!", Toast.LENGTH_LONG).show();
+        _gameDecision = GameLogic.getInstance().play(Integer.parseInt(_coordinate));
+        if (_gameDecision == true) {
+            builder
+                    .setTitle("Congratulations")
+                    .setMessage("You win!")
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+            XMPP.getInstance().sendMessage("game", "lose", XMPP.getInstance().getGameOpponent());
+            GameLogic.getInstance().initNewGame();
         }
 
 

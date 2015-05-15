@@ -17,13 +17,17 @@ public class GameLogic {
     }
 
     private GameLogic() {
-        _gameArea = new boolean[8];
+        initNewGame();
+    }
+
+    public void initNewGame() {
+        _gameArea = new boolean[9];
+        _turnCounter = 0;
 
         for (int i=0;i<=8;i++) {
             _gameArea[i] = false;
         }
     }
-
 
     public boolean play(int coord) {
         _turnCounter++;
@@ -34,9 +38,6 @@ public class GameLogic {
             return true;
         }
         else {
-            if (_turnCounter == 9) {
-                gameEnd();
-            }
             return false;
         }
     }
@@ -72,7 +73,4 @@ public class GameLogic {
         return false;
     }
 
-    public void gameEnd() {
-        _turnCounter = 0;
-    }
 }
