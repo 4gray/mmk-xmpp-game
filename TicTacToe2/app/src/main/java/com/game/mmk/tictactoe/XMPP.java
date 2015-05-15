@@ -36,7 +36,6 @@ public class XMPP {
     private static XMPP instance = null;
     private String gameOpponent = null;
     private String login = null;
-    private String starter = null;
 
     // returns XMPP class instance
     public synchronized static XMPP getInstance() {
@@ -46,11 +45,14 @@ public class XMPP {
         return instance;
     }
 
+    /*
+        XMPP method which uses AsyncTask to connect with XMPP server
+     */
+
     public void setConnection(String login, String pass, String server, Context context) throws ExecutionException, InterruptedException {
         this.connection = (AbstractXMPPConnection) new XMPPTask(login,pass,server).execute().get();
 
         setUserLogin(login);
-
         this.context = context;
 
         // set message listeners
@@ -121,10 +123,16 @@ public class XMPP {
         }
     }
 
+    /*
+        Returns XMPPConnection object for handling in activities
+     */
     public AbstractXMPPConnection getConnection() {
         return this.connection;
     }
 
+    /*
+        Returns buddy list (roster) for connected user
+     */
     public Collection<RosterEntry> getRoster() {
         Roster roster = Roster.getInstanceFor(this.connection);
 
@@ -137,13 +145,13 @@ public class XMPP {
                 e.printStackTrace();
             }
 
-        Log.d("roster", String.valueOf(roster.getEntryCount()));
+        //Log.d("roster", String.valueOf(roster.getEntryCount()));
 
         Collection<RosterEntry> entries = roster.getEntries();
 
-
         return entries;
     }
+
 
     public void sendMessage(String subject, String body, String receiver) {
         Chat newChat = chatmanager.createChat(receiver);
@@ -159,10 +167,6 @@ public class XMPP {
         }
     }
 
-    public void disconnect() {
-        this.connection.disconnect();
-    }
-
     public void setUserLogin(String login) {
         this.login = login;
     }
@@ -171,14 +175,9 @@ public class XMPP {
         return login;
     }
 
-    public void setStarter(String starter) {
-        this.starter = starter;
+    public void disconnect() {
+        this.connection.disconnect();
     }
-
-    public String getStarter() {
-        return starter;
-    }
-
 
     public void setGameOpponent(String from) {
         this.gameOpponent = from;
@@ -188,6 +187,10 @@ public class XMPP {
         return this.gameOpponent;
     }
 
+
+    /*
+        AsyncTask class as extra thread for connection to XMPP server in background
+     */
     public class XMPPTask extends AsyncTask {
 
         public String username;
@@ -235,7 +238,6 @@ public class XMPP {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
 
             return connection;
         }

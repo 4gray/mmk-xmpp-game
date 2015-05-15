@@ -9,6 +9,7 @@ public class GameLogic {
 
     private boolean[] _gameArea = null;
     private int _turnCounter = 0;
+    private String _starter = null;
 
     private static GameLogic ourInstance = new GameLogic();
 
@@ -20,6 +21,10 @@ public class GameLogic {
         initNewGame();
     }
 
+    /*
+        Initiate new game - reset all variables to default
+     */
+
     public void initNewGame() {
         _gameArea = new boolean[9];
         _turnCounter = 0;
@@ -28,6 +33,10 @@ public class GameLogic {
             _gameArea[i] = false;
         }
     }
+
+    /*
+        Method is called on each turn and fills array with coordinates, which are checked on game area
+     */
 
     public boolean play(int coord) {
         _turnCounter++;
@@ -42,8 +51,10 @@ public class GameLogic {
         }
     }
 
+    /*
+        Method is calling on each turn and contains all win cases, which returns true
+     */
     public boolean gameDecision() {
-        // win cases
         if (_gameArea[0] == true && _gameArea[1] == true && _gameArea[2] == true) {
             return true;
         }
@@ -69,13 +80,28 @@ public class GameLogic {
             return true;
         }
 
-        // draw
         return false;
     }
 
+    /*
+        Method counts all turns - important for draw decision
+     */
     public int getTurnCounter() {
-        Log.d("turncounter: ", String.valueOf(_turnCounter));
         return _turnCounter;
+    }
+
+    /*
+        Method sets who start with the first turn
+     */
+    public void setStarter(String starter) {
+        this._starter = starter;
+    }
+
+    /*
+        Returns user who start at first
+     */
+    public String getStarter() {
+        return _starter;
     }
 
 }

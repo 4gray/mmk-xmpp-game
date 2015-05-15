@@ -96,7 +96,7 @@ public class BuddyListActivity extends ActionBarActivity {
         } else if (body.equals("accept")) {
             XMPP.getInstance().sendMessage("invite", "go", from);
             XMPP.getInstance().setGameOpponent(from);
-            XMPP.getInstance().setStarter(from);
+            GameLogic.getInstance().setStarter(from);
             goToGameArea();
         } else if (body.equals("go")) {
             XMPP.getInstance().setGameOpponent(from);

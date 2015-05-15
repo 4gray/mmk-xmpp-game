@@ -41,13 +41,13 @@ public class MainActivity extends ActionBarActivity {
     private String _gameOpponent = null;
     private String _starter = null;
     private Boolean _gameDecision = null;
+    private Integer _turnLimit = 0;
     private TMessage _tmessage = null;
     private AlertDialog.Builder _builder = null;
     private ImageButton imgBtn = null;
     private RelativeLayout _layout = null;
     private ImageView _turnIndicatorImg = null;
     private TextView _turnIndicator = null;
-    private int _turnLimit = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,7 +67,7 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
-        _starter = XMPP.getInstance().getStarter();
+        _starter = GameLogic.getInstance().getStarter();
 
         // get game opponent
         _gameOpponent = XMPP.getInstance().getGameOpponent();
@@ -203,7 +203,8 @@ public class MainActivity extends ActionBarActivity {
         // block UI after my turn and wait for opponent
         blockUI();
 
-        if (XMPP.getInstance().getUserLogin() == XMPP.getInstance().getStarter()) {
+        // starter makes 5 turns
+        if (XMPP.getInstance().getUserLogin() == GameLogic.getInstance().getStarter()) {
             _turnLimit = 4;
         }
         else {
