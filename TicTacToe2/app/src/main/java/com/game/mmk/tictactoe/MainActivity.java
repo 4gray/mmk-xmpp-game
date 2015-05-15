@@ -38,15 +38,16 @@ import java.util.ArrayList;
 public class MainActivity extends ActionBarActivity {
 
     private String _coordinate = null;
-    private RelativeLayout _layout = null;
     private String _gameOpponent = null;
+    private String _starter = null;
+    private Boolean _gameDecision = null;
+    private TMessage _tmessage = null;
+    private AlertDialog.Builder _builder = null;
+    private ImageButton imgBtn = null;
+    private RelativeLayout _layout = null;
     private ImageView _turnIndicatorImg = null;
     private TextView _turnIndicator = null;
-    private TMessage _tmessage = null;
-    private ImageButton imgBtn = null;
-    private Boolean _gameDecision = null;
-    private AlertDialog.Builder builder = null;
-    private String _starter = null;
+    private int _turnLimit = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,9 +58,9 @@ public class MainActivity extends ActionBarActivity {
         _turnIndicator = (TextView) findViewById(R.id.turnIndicator);
         _turnIndicatorImg = (ImageView) findViewById(R.id.turnIndicatorImg);
 
-        builder = new AlertDialog.Builder(this);
+        _builder = new AlertDialog.Builder(this);
 
-        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+        _builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
                goToBuddyList();
@@ -71,6 +72,7 @@ public class MainActivity extends ActionBarActivity {
         // get game opponent
         _gameOpponent = XMPP.getInstance().getGameOpponent();
 
+        // block one UI
         if (_starter == _gameOpponent) {
             blockUI();
         }
@@ -145,12 +147,19 @@ public class MainActivity extends ActionBarActivity {
                     imgBtn.setEnabled(false);
                     break;
                 case "lose":
-                    builder.setTitle("Ohhh")
+                    _builder.setTitle("Ohhh")
                         .setMessage("You lose!")
                             .setIcon(android.R.drawable.ic_dialog_alert)
                             .show();
                     GameLogic.getInstance().initNewGame();
-
+                    break;
+                case "draw":
+                    _builder
+                            .setTitle("WOW")
+                            .setMessage("Draw!")
+                            .setIcon(android.R.drawable.ic_dialog_alert)
+                            .show();
+                    GameLogic.getInstance().initNewGame();
                     break;
             }
         }
@@ -194,15 +203,31 @@ public class MainActivity extends ActionBarActivity {
         // block UI after my turn and wait for opponent
         blockUI();
 
+        if (XMPP.getInstance().getUserLogin() == XMPP.getInstance().getStarter()) {
+            _turnLimit = 4;
+        }
+        else {
+            _turnLimit = 5;
+        }
+
         //call gameLogic
         _gameDecision = GameLogic.getInstance().play(Integer.parseInt(_coordinate));
         if (_gameDecision == true) {
-            builder
+            _builder
                     .setTitle("Congratulations")
                     .setMessage("You win!")
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .show();
             XMPP.getInstance().sendMessage("game", "lose", XMPP.getInstance().getGameOpponent());
+            GameLogic.getInstance().initNewGame();
+        }
+        else if (GameLogic.getInstance().getTurnCounter() == _turnLimit) {
+            _builder
+                    .setTitle("WOW")
+                    .setMessage("Draw!")
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .show();
+            XMPP.getInstance().sendMessage("game", "draw", XMPP.getInstance().getGameOpponent());
             GameLogic.getInstance().initNewGame();
         }
 

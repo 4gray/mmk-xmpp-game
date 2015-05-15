@@ -73,4 +73,9 @@ public class GameLogic {
         return false;
     }
 
+    public int getTurnCounter() {
+        Log.d("turncounter: ", String.valueOf(_turnCounter));
+        return _turnCounter;
+    }
+
 }
