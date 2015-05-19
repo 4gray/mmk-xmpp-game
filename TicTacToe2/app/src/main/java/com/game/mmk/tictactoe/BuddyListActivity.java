@@ -114,8 +114,10 @@ public class BuddyListActivity extends ActionBarActivity {
         } else if (body.equals("decline")) {
             // TODO
             Toast.makeText(getApplicationContext(), "Invitation declined", Toast.LENGTH_LONG).show();
+            dlg.dismiss();
             timer.cancel();
         } else if (body.equals("timeout")) {
+            Toast.makeText(getApplicationContext(), "Timeout", Toast.LENGTH_LONG).show();
             dlg.dismiss();
             timer.cancel();
         }
@@ -138,13 +140,23 @@ public class BuddyListActivity extends ActionBarActivity {
         tt = new TimerTask() {
             @Override
             public void run() {
-                dlg.dismiss();
-                timer.cancel();
-                XMPP.getInstance().sendMessage("invite", "timeout", XMPP.getInstance().getGameOpponent());
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        dlg.dismiss();
+                        timer.cancel();
+                        makeToast("Timeout");
+                        XMPP.getInstance().sendMessage("invite", "timeout", XMPP.getInstance().getGameOpponent());
+                    }
+                });
             }
         };
         timer.schedule(tt,10000);
 
+    }
+
+    private void makeToast (String title) {
+        Toast.makeText(getApplicationContext(), title, Toast.LENGTH_LONG).show();
     }
 
     private void goToGameArea() {
