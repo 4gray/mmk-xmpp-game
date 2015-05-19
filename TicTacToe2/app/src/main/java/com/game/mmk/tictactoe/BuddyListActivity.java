@@ -15,7 +15,10 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import org.jivesoftware.smack.chat.ChatManager;
+import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
+import org.jivesoftware.smack.roster.RosterListener;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -31,6 +34,8 @@ public class BuddyListActivity extends ActionBarActivity {
     private Timer timer = null;
     private TimerTask tt = null;
     private AlertDialog dlg = null;
+    private RosterAdapter _adapter = null;
+    private ListView _rosterListView = null;
 
 
     @Override
@@ -43,33 +48,57 @@ public class BuddyListActivity extends ActionBarActivity {
 
         setTitle(userLogin + "'s buddy list");
 
-        // get roster
         this.chatmanager = XMPP.getInstance().getChatmanager();
-        Collection<RosterEntry> entries = XMPP.getInstance().getRoster();
-        ArrayList<RosterEntry> list = new ArrayList<RosterEntry>();
-        list.addAll(entries);
 
-        final ListView rosterList = (ListView) findViewById(R.id.listView);
-        RosterAdapter adapter = new RosterAdapter(this, list);
-
+        _rosterListView = (ListView) findViewById(R.id.listView);
+        _adapter = new RosterAdapter(this, XMPP.getInstance().getBuddyList());
 
         // Assign adapter to ListView
-        rosterList.setAdapter(adapter);
-        rosterList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        _rosterListView.setAdapter(_adapter);
+        _rosterListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
             @Override
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
 
                 // ListView Clicked item value
-                RosterEntry itemValue = (RosterEntry) rosterList.getItemAtPosition(position);
+                RosterEntry itemValue = (RosterEntry) _rosterListView.getItemAtPosition(position);
 
                 sendInvitation(itemValue.getUser());
             }
 
         });
 
+        // TODO
+        Roster roster = XMPP.getInstance().getRoster();
+        roster.addRosterListener(new RosterListener() {
+            @Override
+            public void entriesAdded(Collection<String> addresses) {
 
+            }
+
+            @Override
+            public void entriesUpdated(Collection<String> addresses) {
+
+            }
+
+            @Override
+            public void entriesDeleted(Collection<String> addresses) {
+
+            }
+
+            @Override
+            public void presenceChanged(Presence presence) {
+                Log.d("Roster was changed", presence.getStatus());
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        _adapter.updateRosterList(XMPP.getInstance().getBuddyList());
+                    }
+                });
+
+            }
+        });
 
 
     }
@@ -101,6 +130,7 @@ public class BuddyListActivity extends ActionBarActivity {
                     })
                     .setIcon(android.R.drawable.ic_dialog_alert);
             dlg = builder.create();
+            dlg.cancel();
             dlg.show();
         } else if (body.equals("accept")) {
             XMPP.getInstance().sendMessage("invite", "go", from);
@@ -128,6 +158,7 @@ public class BuddyListActivity extends ActionBarActivity {
     private void sendInvitation(String name) {
         XMPP.getInstance().setGameOpponent(name);
         XMPP.getInstance().sendMessage("invite", "invitation", name);
+
         builder
                 .setTitle("Invitation")
                 .setMessage("Waiting for opponent answer.");

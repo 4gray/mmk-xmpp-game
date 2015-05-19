@@ -6,7 +6,9 @@ import android.os.AsyncTask;
 import android.util.Log;
 
 import org.jivesoftware.smack.AbstractXMPPConnection;
+import org.jivesoftware.smack.ConnectionListener;
 import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.chat.Chat;
 import org.jivesoftware.smack.chat.ChatManager;
@@ -16,10 +18,12 @@ import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.Roster;
 import org.jivesoftware.smack.roster.RosterEntry;
+import org.jivesoftware.smack.roster.RosterListener;
 import org.jivesoftware.smack.tcp.XMPPTCPConnection;
 import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.concurrent.ExecutionException;
 
@@ -36,6 +40,11 @@ public class XMPP {
     private static XMPP instance = null;
     private String gameOpponent = null;
     private String login = null;
+    private Roster _roster = null;
+    private Collection<RosterEntry> _rosterEntries = null;
+    private String _userStatus = null;
+    private Presence _presence = null;
+
 
     // returns XMPP class instance
     public synchronized static XMPP getInstance() {
@@ -74,6 +83,43 @@ public class XMPP {
 
         });
 
+        this.connection.addConnectionListener(new ConnectionListener() {
+            @Override
+            public void connected(XMPPConnection connection) {
+
+            }
+
+            @Override
+            public void authenticated(XMPPConnection connection, boolean resumed) {
+
+            }
+
+            @Override
+            public void connectionClosed() {
+
+            }
+
+            @Override
+            public void connectionClosedOnError(Exception e) {
+
+            }
+
+            @Override
+            public void reconnectionSuccessful() {
+
+            }
+
+            @Override
+            public void reconnectingIn(int seconds) {
+
+            }
+
+            @Override
+            public void reconnectionFailed(Exception e) {
+
+            }
+        });
+
     }
 
     public ChatManager getChatmanager() {
@@ -106,11 +152,16 @@ public class XMPP {
         }
     }
 
-    public void changePresence(String type) {
+    public void changePresence(String type) throws SmackException.NotConnectedException {
+
+
         Presence presence = null;
+        /*
         if (type.equals("available")) {
             presence = new Presence(Presence.Type.available);
             presence.setStatus("Ready");
+            presence.setPriority(1);
+            presence.setMode(Presence.Mode.available);
         } else if (type.equals("unavailable")) {
             presence = new Presence(Presence.Type.unavailable);
             presence.setStatus("In game");
@@ -121,6 +172,10 @@ public class XMPP {
         } catch (SmackException.NotConnectedException e) {
             e.printStackTrace();
         }
+        */
+
+        presence = new Presence(Presence.Type.available, "Test", 42, Presence.Mode.available);
+        this.connection.sendPacket(presence);
     }
 
     /*
@@ -133,23 +188,21 @@ public class XMPP {
     /*
         Returns buddy list (roster) for connected user
      */
-    public Collection<RosterEntry> getRoster() {
-        Roster roster = Roster.getInstanceFor(this.connection);
+    public Collection<RosterEntry> getRosterEntries() {
+        _roster = Roster.getInstanceFor(this.connection);
 
-        if (!roster.isLoaded())
+        if (!_roster.isLoaded())
             try {
-                roster.reloadAndWait();
+                _roster.reloadAndWait();
             } catch (SmackException.NotLoggedInException e) {
                 e.printStackTrace();
             } catch (SmackException.NotConnectedException e) {
                 e.printStackTrace();
             }
 
-        //Log.d("roster", String.valueOf(roster.getEntryCount()));
+        _rosterEntries = _roster.getEntries();
 
-        Collection<RosterEntry> entries = roster.getEntries();
-
-        return entries;
+        return _rosterEntries;
     }
 
 
@@ -185,6 +238,32 @@ public class XMPP {
 
     public String getGameOpponent() {
         return this.gameOpponent;
+    }
+
+    public Roster getRoster() {
+        return _roster;
+    }
+
+    public Presence getUserPresence(String user) {
+        _roster = Roster.getInstanceFor(XMPP.getInstance().getConnection());
+        _presence = _roster.getPresence(user);
+        return _presence;
+    }
+
+    public String getUserStatus(String user) {
+        _roster = Roster.getInstanceFor(XMPP.getInstance().getConnection());
+        _userStatus = getUserPresence(user).getStatus();
+        return _userStatus;
+    }
+
+    public ArrayList getBuddyList() {
+        ArrayList<Buddy> buddyList = new ArrayList<>();
+
+        for(RosterEntry entry : getRosterEntries()) {
+            _presence = _roster.getPresence(entry.getUser());
+            buddyList.add(new Buddy(entry.getUser(), _presence.getStatus(), _presence.getType().name()));
+        }
+        return buddyList;
     }
 
 

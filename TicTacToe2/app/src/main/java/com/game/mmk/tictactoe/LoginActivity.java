@@ -119,7 +119,7 @@ public class LoginActivity extends ActionBarActivity {
 
 
     // for faster debug only
-    public void loginAsUser(View view) throws ExecutionException, InterruptedException {
+    public void loginAsUser(View view) throws ExecutionException, InterruptedException, SmackException.NotConnectedException {
 
         if (view.getTag().equals("bob")) {
             XMPP.getInstance().setConnection("bob_tud", "bob", "jwchat.org", getApplicationContext());
@@ -133,7 +133,7 @@ public class LoginActivity extends ActionBarActivity {
         Log.d("isConnected: ", String.valueOf(connection.isConnected()));
         if (connection.isConnected() == true) {
             Toast.makeText(getApplicationContext(), "Connected!", Toast.LENGTH_LONG).show();
-            //XMPP.getInstance().changePresence("availabe");
+            XMPP.getInstance().changePresence("availabe");
             //go to buddy list activity
             Intent intent = new Intent(this, BuddyListActivity.class);
             startActivity(intent);
