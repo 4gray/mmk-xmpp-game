@@ -18,6 +18,8 @@ import org.jivesoftware.smack.roster.RosterEntry;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class BuddyListActivity extends ActionBarActivity {
@@ -25,6 +27,8 @@ public class BuddyListActivity extends ActionBarActivity {
     private ChatManager chatmanager = null;
     private AlertDialog.Builder builder = null;
     private String userLogin = null;
+    private Timer timer = null;
+    private TimerTask tt = null;
 
 
     @Override
@@ -34,6 +38,7 @@ public class BuddyListActivity extends ActionBarActivity {
 
         builder = new AlertDialog.Builder(this);
         userLogin = XMPP.getInstance().getUserLogin();
+        timer = new Timer();
 
         setTitle(userLogin + "'s buddy list");
 
@@ -97,6 +102,7 @@ public class BuddyListActivity extends ActionBarActivity {
             XMPP.getInstance().sendMessage("invite", "go", from);
             XMPP.getInstance().setGameOpponent(from);
             GameLogic.getInstance().setStarter(from);
+            tt.cancel();
             goToGameArea();
         } else if (body.equals("go")) {
             XMPP.getInstance().setGameOpponent(from);
@@ -104,6 +110,7 @@ public class BuddyListActivity extends ActionBarActivity {
         } else if (body.equals("decline")) {
             // TODO
             Toast.makeText(getApplicationContext(), "Invitation declined", Toast.LENGTH_LONG).show();
+            tt.cancel();
         }
 
     }
@@ -117,10 +124,21 @@ public class BuddyListActivity extends ActionBarActivity {
                 .setMessage("Waiting for opponent answer.")
                 .show();
         //todo initiate timeout
+        tt = new TimerTask() {
+            @Override
+            public void run() {
+                builder
+                    .setTitle("Timeout")
+                    .setMessage("Opponent sleeps.")
+                    .show();
+            }
+        };
+        timer.schedule(tt,10000);
+
     }
 
     private void goToGameArea() {
-        //XMPP.getInstance().changePresence("unavailable");
+        XMPP.getInstance().changePresence("unavailable");
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
@@ -149,7 +167,6 @@ public class BuddyListActivity extends ActionBarActivity {
 
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
