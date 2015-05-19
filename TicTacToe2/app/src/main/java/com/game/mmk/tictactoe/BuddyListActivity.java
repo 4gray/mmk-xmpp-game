@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -29,6 +30,7 @@ public class BuddyListActivity extends ActionBarActivity {
     private String userLogin = null;
     private Timer timer = null;
     private TimerTask tt = null;
+    private AlertDialog dlg = null;
 
 
     @Override
@@ -96,8 +98,8 @@ public class BuddyListActivity extends ActionBarActivity {
                             XMPP.getInstance().sendMessage("invite", "decline", from);
                         }
                     })
-                    .setIcon(android.R.drawable.ic_dialog_alert)
-                    .show();
+                    .setIcon(android.R.drawable.ic_dialog_alert);
+            dlg = builder.create();
         } else if (body.equals("accept")) {
             XMPP.getInstance().sendMessage("invite", "go", from);
             XMPP.getInstance().setGameOpponent(from);
@@ -110,7 +112,10 @@ public class BuddyListActivity extends ActionBarActivity {
         } else if (body.equals("decline")) {
             // TODO
             Toast.makeText(getApplicationContext(), "Invitation declined", Toast.LENGTH_LONG).show();
-            tt.cancel();
+            timer.cancel();
+        } else if (body.equals("decline")) {
+            dlg.dismiss();
+            timer.cancel();
         }
 
     }
@@ -121,16 +126,17 @@ public class BuddyListActivity extends ActionBarActivity {
         XMPP.getInstance().sendMessage("invite", "invitation", name);
         builder
                 .setTitle("Invitation")
-                .setMessage("Waiting for opponent answer.")
-                .show();
+                .setMessage("Waiting for opponent answer.");
+
+        dlg = builder.create();
+        dlg.show();
         //todo initiate timeout
         tt = new TimerTask() {
             @Override
             public void run() {
-                builder
-                    .setTitle("Timeout")
-                    .setMessage("Opponent sleeps.")
-                    .show();
+                dlg.dismiss();
+                timer.cancel();
+                XMPP.getInstance().sendMessage("invite", "timeout", XMPP.getInstance().getGameOpponent());
             }
         };
         timer.schedule(tt,10000);
@@ -138,7 +144,7 @@ public class BuddyListActivity extends ActionBarActivity {
     }
 
     private void goToGameArea() {
-        XMPP.getInstance().changePresence("unavailable");
+        //XMPP.getInstance().changePresence("unavailable");
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
