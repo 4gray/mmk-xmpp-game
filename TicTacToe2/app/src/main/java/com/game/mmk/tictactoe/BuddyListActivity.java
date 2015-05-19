@@ -113,7 +113,7 @@ public class BuddyListActivity extends ActionBarActivity {
             // TODO
             Toast.makeText(getApplicationContext(), "Invitation declined", Toast.LENGTH_LONG).show();
             timer.cancel();
-        } else if (body.equals("decline")) {
+        } else if (body.equals("timeout")) {
             dlg.dismiss();
             timer.cancel();
         }
