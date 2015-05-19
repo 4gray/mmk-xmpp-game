@@ -40,7 +40,6 @@ public class BuddyListActivity extends ActionBarActivity {
 
         builder = new AlertDialog.Builder(this);
         userLogin = XMPP.getInstance().getUserLogin();
-        timer = new Timer();
 
         setTitle(userLogin + "'s buddy list");
 
@@ -83,6 +82,8 @@ public class BuddyListActivity extends ActionBarActivity {
 
         String body = tm.getBody();
         final String from = tm.getFrom();
+        timer = new Timer();
+
 
         if (body.equals("invitation")) {
             builder
@@ -100,6 +101,7 @@ public class BuddyListActivity extends ActionBarActivity {
                     })
                     .setIcon(android.R.drawable.ic_dialog_alert);
             dlg = builder.create();
+            dlg.show();
         } else if (body.equals("accept")) {
             XMPP.getInstance().sendMessage("invite", "go", from);
             XMPP.getInstance().setGameOpponent(from);
@@ -130,6 +132,8 @@ public class BuddyListActivity extends ActionBarActivity {
 
         dlg = builder.create();
         dlg.show();
+        timer = new Timer();
+
         //todo initiate timeout
         tt = new TimerTask() {
             @Override
