@@ -27,21 +27,13 @@
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" android:gravity="center" >
-        <Button
-            android:id="@+id/login"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Spielen"
-            android:layout_alignParentBottom="true"
-            android:background="@color/listItem"
-            android:layout_marginRight="5dp" />
+
         <Button
             android:id="@+id/stats"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Statistik"
             android:background="@color/listItem"
-            android:layout_toRightOf="@+id/login"
             android:layout_alignParentBottom="true"
             android:layout_marginRight="5dp"
             />

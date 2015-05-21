@@ -33,6 +33,8 @@ import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -48,6 +50,7 @@ public class MainActivity extends ActionBarActivity {
     private RelativeLayout _layout = null;
     private ImageView _turnIndicatorImg = null;
     private TextView _turnIndicator = null;
+    private Timer timer = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -162,6 +165,7 @@ public class MainActivity extends ActionBarActivity {
                     GameLogic.getInstance().initNewGame();
                     break;
             }
+            setTimeout();
         }
     }
 
@@ -187,6 +191,31 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    public void setTimeout() {
+        timer = new Timer();
+
+        //todo initiate timeout
+        TimerTask tt = new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        timer.cancel();
+                        _builder
+                                .setTitle("Timeout")
+                                .setMessage("The opponent didn't response in time.")
+                                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        goToBuddyList();
+                                    }
+                                });
+                    }
+                });
+            }
+        };
+        timer.schedule(tt,10000);
+    }
 
     // tic or tac click
     public void gameTurn(View view) {

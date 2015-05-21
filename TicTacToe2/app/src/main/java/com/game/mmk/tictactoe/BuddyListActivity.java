@@ -32,7 +32,6 @@ public class BuddyListActivity extends ActionBarActivity {
     private AlertDialog.Builder builder = null;
     private String userLogin = null;
     private Timer timer = null;
-    private TimerTask tt = null;
     private AlertDialog dlg = null;
     private RosterAdapter _adapter = null;
     private ListView _rosterListView = null;
@@ -136,7 +135,7 @@ public class BuddyListActivity extends ActionBarActivity {
             XMPP.getInstance().sendMessage("invite", "go", from);
             XMPP.getInstance().setGameOpponent(from);
             GameLogic.getInstance().setStarter(from);
-            tt.cancel();
+            timer.cancel();
             goToGameArea();
         } else if (body.equals("go")) {
             XMPP.getInstance().setGameOpponent(from);
@@ -168,7 +167,7 @@ public class BuddyListActivity extends ActionBarActivity {
         timer = new Timer();
 
         //todo initiate timeout
-        tt = new TimerTask() {
+        TimerTask tt = new TimerTask() {
             @Override
             public void run() {
                 runOnUiThread(new Runnable() {

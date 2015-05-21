@@ -12,8 +12,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/imageView2"
         android:layout_centerHorizontal="true"
-        android:background="@drawable/game_bg"
-        android:layout_above="@+id/cancelBtn" />
+        android:layout_above="@+id/cancelBtn"
+        android:src="@drawable/game_bg" />
 
 
     <ImageButton
@@ -27,7 +27,7 @@
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
         android:onClick="gameTurn"
-        android:background="@color/background_color"/>
+        android:background="#00000000"/>
 
     <ImageButton
         android:layout_width="90dp"
@@ -40,7 +40,7 @@
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
         android:onClick="gameTurn"
-        android:background="@color/background_color"/>
+        android:background="#00000000"/>
 
     <ImageButton
         android:layout_width="90dp"
@@ -53,7 +53,7 @@
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
         android:onClick="gameTurn"
-        android:background="@color/background_color"/>
+        android:background="#00000000"/>
 
     <ImageButton
         android:layout_width="90dp"
@@ -67,7 +67,7 @@
         android:tag="3"
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
-        android:background="@color/background_color"/>
+        android:background="#00000000"/>
 
     <ImageButton
         android:layout_width="90dp"
@@ -81,7 +81,7 @@
         android:tag="4"
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
-        android:background="@color/background_color"/>
+        android:background="#00000000"/>
 
     <ImageButton
         android:layout_width="90dp"
@@ -95,7 +95,7 @@
         android:tag="5"
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
-        android:background="@color/background_color"/>
+        android:background="#00000000"/>
 
     <ImageButton
         android:layout_width="90dp"
@@ -108,7 +108,7 @@
         android:tag="6"
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
-        android:background="@color/background_color"/>
+        android:background="#00000000"/>
 
     <ImageButton
         android:layout_width="90dp"
@@ -121,7 +121,7 @@
         android:tag="7"
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
-        android:background="@color/background_color"/>
+        android:background="#00000000"/>
 
     <ImageButton
         android:layout_width="90dp"
@@ -135,7 +135,7 @@
         android:tag="8"
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
-        android:background="@color/background_color"/>
+        android:background="#00000000"/>
 
     <Button
         android:layout_width="wrap_content"
