@@ -62,9 +62,9 @@ public class BuddyListActivity extends ActionBarActivity {
                                     int position, long id) {
 
                 // ListView Clicked item value
-                RosterEntry itemValue = (RosterEntry) _rosterListView.getItemAtPosition(position);
+                Buddy itemValue = (Buddy) _rosterListView.getItemAtPosition(position);
 
-                sendInvitation(itemValue.getUser());
+                sendInvitation(itemValue.getName());
             }
 
         });
