@@ -8,39 +8,39 @@
 
 
     <ImageView
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/imageView2"
         android:layout_centerHorizontal="true"
         android:layout_above="@+id/cancelBtn"
-        android:src="@drawable/game_bg" />
+        android:src="@drawable/game_bg"
+        android:scaleType="fitXY" />
 
 
     <ImageButton
         android:layout_width="90dp"
         android:layout_height="100dp"
         android:id="@+id/button0"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:tag="0"
-        android:layout_marginTop="40dp"
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
         android:onClick="gameTurn"
-        android:background="#00000000"/>
+        android:background="#00000000"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <ImageButton
         android:layout_width="90dp"
         android:layout_height="100dp"
         android:id="@+id/button1"
-        android:layout_below="@+id/textView"
-        android:layout_centerHorizontal="true"
         android:tag="1"
-        android:layout_marginTop="40dp"
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
         android:onClick="gameTurn"
-        android:background="#00000000"/>
+        android:background="#00000000"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
 
     <ImageButton
         android:layout_width="90dp"
@@ -59,92 +59,90 @@
         android:layout_width="90dp"
         android:layout_height="100dp"
         android:id="@+id/button3"
-        android:layout_below="@+id/button0"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
         android:onClick="gameTurn"
-        android:layout_marginTop="60dp"
         android:tag="3"
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
-        android:background="#00000000"/>
+        android:background="#00000000"
+        android:layout_alignTop="@+id/button4"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <ImageButton
         android:layout_width="90dp"
         android:layout_height="100dp"
         android:id="@+id/button4"
-        android:layout_below="@+id/button1"
-        android:layout_alignLeft="@+id/button1"
-        android:layout_alignStart="@+id/button1"
         android:onClick="gameTurn"
-        android:layout_marginTop="60dp"
         android:tag="4"
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
-        android:background="#00000000"/>
+        android:background="#00000000"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true" />
 
     <ImageButton
         android:layout_width="90dp"
         android:layout_height="100dp"
         android:id="@+id/button5"
-        android:layout_below="@+id/button2"
-        android:layout_alignLeft="@+id/button2"
-        android:layout_alignStart="@+id/button2"
         android:onClick="gameTurn"
-        android:layout_marginTop="60dp"
         android:tag="5"
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
-        android:background="#00000000"/>
+        android:background="#00000000"
+        android:layout_centerVertical="true"
+        android:layout_alignRight="@+id/imageView2"
+        android:layout_alignEnd="@+id/imageView2" />
 
     <ImageButton
         android:layout_width="90dp"
         android:layout_height="100dp"
         android:id="@+id/button6"
-        android:layout_below="@+id/button3"
-        android:layout_alignParentLeft="true"
         android:onClick="gameTurn"
-        android:layout_marginTop="60dp"
         android:tag="6"
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
-        android:background="#00000000"/>
+        android:background="#00000000"
+        android:layout_alignBottom="@+id/imageView2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
 
     <ImageButton
         android:layout_width="90dp"
         android:layout_height="100dp"
         android:id="@+id/button7"
-        android:layout_below="@+id/button4"
-        android:layout_alignLeft="@id/button4"
         android:onClick="gameTurn"
-        android:layout_marginTop="60dp"
         android:tag="7"
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
-        android:background="#00000000"/>
+        android:background="#00000000"
+        android:layout_alignBottom="@+id/imageView2"
+        android:layout_alignLeft="@+id/button4"
+        android:layout_alignStart="@+id/button4" />
 
     <ImageButton
         android:layout_width="90dp"
         android:layout_height="100dp"
         android:id="@+id/button8"
-        android:layout_below="@+id/button5"
-        android:layout_alignLeft="@+id/button5"
-        android:layout_alignStart="@+id/button5"
         android:onClick="gameTurn"
-        android:layout_marginTop="60dp"
         android:tag="8"
         android:scaleType="fitCenter"
         android:adjustViewBounds="true"
-        android:background="#00000000"/>
+        android:background="#00000000"
+        android:layout_alignBottom="@+id/imageView2"
+        android:layout_alignRight="@+id/imageView2"
+        android:layout_alignEnd="@+id/imageView2" />
 
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Aufgeben"
+        android:text="Surrender"
         android:id="@+id/cancelBtn"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:textColor="@color/listItem"
+        android:singleLine="false"
+        android:background="#00000000" />
 
     <ImageView
         android:layout_marginLeft="20dp"
@@ -163,7 +161,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:text="Du bist dran"
+        android:text="Your turn"
         android:layout_marginLeft="10dp"
         android:textColor="@color/listItem"
         android:id="@+id/turnIndicator"
