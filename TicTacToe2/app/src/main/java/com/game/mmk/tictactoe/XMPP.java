@@ -1,5 +1,7 @@
 package com.game.mmk.tictactoe;
 
+import android.app.Activity;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
@@ -58,32 +60,14 @@ public class XMPP {
         XMPP method which uses AsyncTask to connect with XMPP server
      */
 
-    public void setConnection(String login, String pass, String server, Context context) throws ExecutionException, InterruptedException {
-        this.connection = (AbstractXMPPConnection) new XMPPTask(login,pass,server).execute().get();
+    public void setConnection(LoginActivity caller, final String login, String pass, String server, Context context) throws ExecutionException, InterruptedException {
+
+        new XMPPTask(caller, login, pass, server).execute();
 
         setUserLogin(login);
         this.context = context;
 
-        // set message listeners
-        chatmanager = ChatManager.getInstanceFor(connection);
-
-        chatmanager.addChatListener(new ChatManagerListener() {
-            @Override
-            public void chatCreated(Chat chat, boolean createdLocally) {
-            Log.d("chat:", chat.toString());
-            chat.addMessageListener(new ChatMessageListener() {
-
-                @Override
-                public void processMessage(Chat chat, Message message) {
-                 forwardMessage(message);
-                }
-
-            });
-            }
-
-        });
-
-        this.connection.addConnectionListener(new ConnectionListener() {
+       /* connection.addConnectionListener(new ConnectionListener() {
             @Override
             public void connected(XMPPConnection connection) {
 
@@ -119,6 +103,7 @@ public class XMPP {
 
             }
         });
+        */
 
     }
 
@@ -174,7 +159,7 @@ public class XMPP {
         }
         */
 
-        presence = new Presence(Presence.Type.available, "Test", 42, Presence.Mode.available);
+        presence = new Presence(Presence.Type.available, "Ready for game", 42, Presence.Mode.available);
         this.connection.sendPacket(presence);
     }
 
@@ -270,17 +255,30 @@ public class XMPP {
     /*
         AsyncTask class as extra thread for connection to XMPP server in background
      */
-    public class XMPPTask extends AsyncTask {
+    private class XMPPTask extends AsyncTask {
 
         public String username;
         public String password;
         public String server;
+        public LoginActivity caller;
+        private ProgressDialog dialog = null;
 
-        public XMPPTask(String username, String password, String server) {
+        public XMPPTask(LoginActivity caller, String username, String password, String server) {
             this.username = username;
             this.password = password;
             this.server = server;
+            this.caller = caller;
+            dialog = new ProgressDialog(caller);
         }
+
+
+        @Override
+        protected void onPreExecute() {
+            this.dialog.setMessage("Please wait");
+            this.dialog.show();
+        }
+
+
 
         @Override
         protected Object doInBackground(Object[] params) {
@@ -322,6 +320,40 @@ public class XMPP {
         }
 
 
+        @Override
+        protected void onPostExecute(Object result) {
+
+            if (dialog.isShowing()) {
+                dialog.dismiss();
+            }
+
+            connection = (AbstractXMPPConnection) result;
+
+            // set message listeners
+            chatmanager = ChatManager.getInstanceFor(connection);
+
+            chatmanager.addChatListener(new ChatManagerListener() {
+                @Override
+                public void chatCreated(Chat chat, boolean createdLocally) {
+                    Log.d("chat:", chat.toString());
+                    chat.addMessageListener(new ChatMessageListener() {
+
+                        @Override
+                        public void processMessage(Chat chat, Message message) {
+                            forwardMessage(message);
+                        }
+
+                    });
+                }
+
+            });
+
+            try {
+                caller.onResponseReceived(result);
+            } catch (SmackException.NotConnectedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 
