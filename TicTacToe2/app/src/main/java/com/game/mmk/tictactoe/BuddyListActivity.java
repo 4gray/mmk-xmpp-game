@@ -113,6 +113,8 @@ public class BuddyListActivity extends ActionBarActivity {
         String body = tm.getBody();
         final String from = tm.getFrom();
         timer = new Timer();
+        
+        Toast.makeText(getApplicationContext(), body, Toast.LENGTH_LONG).show();
 
         if (body.equals("invitation")) {
             builder
@@ -152,6 +154,9 @@ public class BuddyListActivity extends ActionBarActivity {
             Toast.makeText(getApplicationContext(), "Timeout", Toast.LENGTH_LONG).show();
             dlg.dismiss();
             timer.cancel();
+        } else if (body.equals("playAgain")) {
+            Toast.makeText(getApplicationContext(), "Play again with " + from, Toast.LENGTH_LONG).show();
+            sendInvitation(from);
         }
 
     }
@@ -184,7 +189,7 @@ public class BuddyListActivity extends ActionBarActivity {
                 });
             }
         };
-        timer.schedule(tt,10000);
+        timer.schedule(tt,30000);
 
     }
 
