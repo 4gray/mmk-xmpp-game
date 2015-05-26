@@ -152,7 +152,7 @@ public class MainActivity extends ActionBarActivity {
                     break;
                 case "lose":
                     _builder.setTitle("Ohhh")
-                            .setMessage("You lose!\nPlay again?")
+                            .setMessage("Du hast verloren!\nNochmal spielen?")
                             .setIcon(android.R.drawable.ic_dialog_alert)
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
@@ -169,8 +169,8 @@ public class MainActivity extends ActionBarActivity {
                     break;
                 case "draw":
                     _builder
-                            .setTitle("WOW")
-                            .setMessage("Draw!\nPlay again?")
+                            .setTitle("Wow")
+                            .setMessage("Unentschieden!\nNochmal spielen?")
                             .setIcon(android.R.drawable.ic_dialog_alert)
                             .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                                 public void onClick(DialogInterface dialog, int which) {
@@ -225,7 +225,7 @@ public class MainActivity extends ActionBarActivity {
                         timer.cancel();
                         _builder
                                 .setTitle("Timeout")
-                                .setMessage("The opponent didn't response in time.")
+                                .setMessage("Der Gegner hat nicht rechtzeitig geantwortet!")
                                 .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
                                     public void onClick(DialogInterface dialog, int which) {
                                         goToBuddyList();
@@ -247,6 +247,7 @@ public class MainActivity extends ActionBarActivity {
         TMessage tm = new TMessage("invite", "playAgain", _gameOpponent);
 
         intent.putExtra("Message", tm);
+
         startActivity(intent);
     }
 
@@ -277,8 +278,8 @@ public class MainActivity extends ActionBarActivity {
         _gameDecision = GameLogic.getInstance().play(Integer.parseInt(_coordinate));
         if (_gameDecision == true) {
             _builder
-                    .setTitle("Congratulations")
-                    .setMessage("You win!\nPlay again?")
+                    .setTitle("Gl\u00FCckwunsch")
+                    .setMessage("Du hast gewonnen!\nNochmal spielen?")
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
@@ -296,8 +297,8 @@ public class MainActivity extends ActionBarActivity {
         }
         else if (GameLogic.getInstance().getTurnCounter() == _turnLimit) {
             _builder
-                    .setTitle("WOW")
-                    .setMessage("Draw!\nPlay again?")
+                    .setTitle("Wow")
+                    .setMessage("Unentschieden!\nNochmal spielen?")
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {

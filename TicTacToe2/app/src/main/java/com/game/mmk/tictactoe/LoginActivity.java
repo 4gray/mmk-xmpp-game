@@ -82,7 +82,7 @@ public class LoginActivity extends ActionBarActivity {
 
         Log.d("isConnected: ", String.valueOf(connection.isConnected()));
         if (connection.isConnected() == true) {
-            Toast.makeText(getApplicationContext(), "Connected!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Verbunden!", Toast.LENGTH_LONG).show();
             //XMPP.getInstance().changePresence("availabe");
             //go to buddy list activity
             Intent intent = new Intent(this, BuddyListActivity.class);
@@ -90,7 +90,7 @@ public class LoginActivity extends ActionBarActivity {
         }
         else {
             // TODO: show error
-            Toast.makeText(getApplicationContext(), "Connection problem", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Verbindungsproblem!", Toast.LENGTH_LONG).show();
         }
 
         // set presence
@@ -140,14 +140,14 @@ public class LoginActivity extends ActionBarActivity {
 
         Log.d("isConnected: ", String.valueOf(connection.isConnected()));
         if (connection.isConnected() == true) {
-            Toast.makeText(getApplicationContext(), "Connected!", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Verbunden!", Toast.LENGTH_LONG).show();
             XMPP.getInstance().changePresence("availabe");
             //go to buddy list activity
             Intent intent = new Intent(this, BuddyListActivity.class);
             startActivity(intent);
         } else {
             // TODO: show error
-            Toast.makeText(getApplicationContext(), "Connection problem", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Verbindungsproblem!", Toast.LENGTH_LONG).show();
         }
 
     }

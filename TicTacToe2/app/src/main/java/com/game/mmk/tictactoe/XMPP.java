@@ -159,7 +159,7 @@ public class XMPP {
         }
         */
 
-        presence = new Presence(Presence.Type.available, "Ready for game", 42, Presence.Mode.available);
+        presence = new Presence(Presence.Type.available, "Spielbereit", 42, Presence.Mode.available);
         this.connection.sendPacket(presence);
     }
 
@@ -274,7 +274,7 @@ public class XMPP {
 
         @Override
         protected void onPreExecute() {
-            this.dialog.setMessage("Please wait");
+            this.dialog.setMessage("Bitte warten!");
             this.dialog.show();
         }
 

@@ -45,7 +45,7 @@ public class BuddyListActivity extends ActionBarActivity {
         builder = new AlertDialog.Builder(this);
         userLogin = XMPP.getInstance().getUserLogin();
 
-        setTitle(userLogin + "'s buddy list");
+        setTitle("Freunde von " + userLogin);
 
         this.chatmanager = XMPP.getInstance().getChatmanager();
 
@@ -113,13 +113,13 @@ public class BuddyListActivity extends ActionBarActivity {
         String body = tm.getBody();
         final String from = tm.getFrom();
         timer = new Timer();
-        
+
         Toast.makeText(getApplicationContext(), body, Toast.LENGTH_LONG).show();
 
         if (body.equals("invitation")) {
             builder
-                    .setTitle("Invitation")
-                    .setMessage("Do you want to join the game?")
+                    .setTitle("Einladung")
+                    .setMessage("M\u00F6chtest du gegen " + from + " spielen?")
                     .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             XMPP.getInstance().sendMessage("invite", "accept", from);
@@ -147,7 +147,7 @@ public class BuddyListActivity extends ActionBarActivity {
             timer.cancel();
         } else if (body.equals("decline")) {
             // TODO
-            Toast.makeText(getApplicationContext(), "Invitation declined", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Einladung abgelehnt", Toast.LENGTH_LONG).show();
             dlg.dismiss();
             timer.cancel();
         } else if (body.equals("timeout")) {
@@ -155,6 +155,7 @@ public class BuddyListActivity extends ActionBarActivity {
             dlg.dismiss();
             timer.cancel();
         } else if (body.equals("playAgain")) {
+            timer.cancel();
             Toast.makeText(getApplicationContext(), "Play again with " + from, Toast.LENGTH_LONG).show();
             sendInvitation(from);
         }
@@ -167,8 +168,8 @@ public class BuddyListActivity extends ActionBarActivity {
         XMPP.getInstance().sendMessage("invite", "invitation", name);
 
         builder
-                .setTitle("Invitation")
-                .setMessage("Waiting for opponent answer.");
+                .setTitle("Einladung")
+                .setMessage("Warten auf Antwort des Gegners.");
 
         dlg = builder.create();
         dlg.show();
