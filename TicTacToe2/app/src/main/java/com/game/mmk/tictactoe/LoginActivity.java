@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,6 +38,7 @@ public class LoginActivity extends ActionBarActivity {
     EditText _username = null;
     EditText _password= null;
     EditText _server = null;
+    AbstractXMPPConnection connection = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +77,7 @@ public class LoginActivity extends ActionBarActivity {
         _server = (EditText) findViewById(R.id.serverTxt);
 
         // create XMPP connection and get connection object
-        XMPP.getInstance().setConnection(_username.getText().toString(), _password.getText().toString(), _server.getText().toString(), getApplicationContext());
+        XMPP.getInstance().setConnection(this, _username.getText().toString(), _password.getText().toString(), _server.getText().toString(), getApplicationContext());
         AbstractXMPPConnection connection = (AbstractXMPPConnection) new XMPP().getInstance().getConnection();
 
         Log.d("isConnected: ", String.valueOf(connection.isConnected()));
@@ -122,11 +124,17 @@ public class LoginActivity extends ActionBarActivity {
     public void loginAsUser(View view) throws ExecutionException, InterruptedException, SmackException.NotConnectedException {
 
         if (view.getTag().equals("bob")) {
-            XMPP.getInstance().setConnection("bob_tud", "bob", "jwchat.org", getApplicationContext());
+            XMPP.getInstance().setConnection(this, "bob_tud", "bob", "jwchat.org", getApplicationContext());
         }
         else {
-            XMPP.getInstance().setConnection("alice_tud", "alice", "jwchat.org", getApplicationContext());
+            XMPP.getInstance().setConnection(this, "alice_tud", "alice", "jwchat.org", getApplicationContext());
         }
+
+    }
+
+    public void onResponseReceived(Object result) throws SmackException.NotConnectedException {
+        Log.d("connection", result.toString());
+        connection = (AbstractXMPPConnection) result;
 
         AbstractXMPPConnection connection = (AbstractXMPPConnection) new XMPP().getInstance().getConnection();
 

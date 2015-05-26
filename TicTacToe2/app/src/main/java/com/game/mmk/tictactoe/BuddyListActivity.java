@@ -73,25 +73,28 @@ public class BuddyListActivity extends ActionBarActivity {
         roster.addRosterListener(new RosterListener() {
             @Override
             public void entriesAdded(Collection<String> addresses) {
-
+                Log.d("Roster was changed", "added");
             }
 
             @Override
             public void entriesUpdated(Collection<String> addresses) {
-
+                Log.d("Roster was changed", "updated");
             }
 
             @Override
             public void entriesDeleted(Collection<String> addresses) {
-
+                Log.d("Roster was changed", "dsad");
             }
 
             @Override
             public void presenceChanged(Presence presence) {
-                Log.d("Roster was changed", presence.getStatus());
+
+                Log.d("Roster was changed", String.valueOf(presence.isAvailable()));
+
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
+
                         _adapter.updateRosterList(XMPP.getInstance().getBuddyList());
                     }
                 });
@@ -107,11 +110,9 @@ public class BuddyListActivity extends ActionBarActivity {
         super.onNewIntent(intent);
 
         TMessage tm = (TMessage) intent.getSerializableExtra("Message");
-
         String body = tm.getBody();
         final String from = tm.getFrom();
         timer = new Timer();
-
 
         if (body.equals("invitation")) {
             builder
@@ -140,6 +141,8 @@ public class BuddyListActivity extends ActionBarActivity {
         } else if (body.equals("go")) {
             XMPP.getInstance().setGameOpponent(from);
             goToGameArea();
+            dlg.dismiss();
+            timer.cancel();
         } else if (body.equals("decline")) {
             // TODO
             Toast.makeText(getApplicationContext(), "Invitation declined", Toast.LENGTH_LONG).show();
