@@ -3,36 +3,19 @@ package com.game.mmk.tictactoe;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.support.v7.app.ActionBarActivity;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.jivesoftware.smack.AbstractXMPPConnection;
-import org.jivesoftware.smack.ConnectionConfiguration;
-import org.jivesoftware.smack.MessageListener;
-import org.jivesoftware.smack.SmackException;
-import org.jivesoftware.smack.XMPPConnection;
-import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.chat.Chat;
-import org.jivesoftware.smack.chat.ChatManager;
-import org.jivesoftware.smack.chat.ChatMessageListener;
-import org.jivesoftware.smack.packet.Message;
-import org.jivesoftware.smack.tcp.XMPPTCPConnection;
-import org.jivesoftware.smack.tcp.XMPPTCPConnectionConfiguration;
-
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -52,6 +35,7 @@ public class MainActivity extends ActionBarActivity {
     private ImageView _turnIndicatorImg = null;
     private TextView _turnIndicator = null;
     private Timer timer = null;
+    private ToneGenerator tg = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,13 +48,16 @@ public class MainActivity extends ActionBarActivity {
 
         _builder = new AlertDialog.Builder(this);
 
+        tg = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100);
+
+        /*
         _builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
                goToBuddyList();
             }
         });
-
+*/
         _starter = GameLogic.getInstance().getStarter();
 
         // get game opponent
@@ -103,6 +90,8 @@ public class MainActivity extends ActionBarActivity {
 
             // unlock UI
             unlockUI();
+
+            tg.startTone(ToneGenerator.TONE_PROP_BEEP);
 
             switch (_tmessage.getBody()) {
                 case "0":
@@ -253,6 +242,9 @@ public class MainActivity extends ActionBarActivity {
 
     // tic or tac click
     public void gameTurn(View view) {
+
+        tg.startTone(ToneGenerator.TONE_PROP_BEEP);
+
         // get field coordinates from clicked button
         _coordinate = view.getTag().toString();
 
@@ -339,8 +331,5 @@ public class MainActivity extends ActionBarActivity {
         _turnIndicatorImg.setImageResource(R.drawable.circle1);
         //Toast.makeText(getApplicationContext(), "UI was unlocked. Now it's your turn.", Toast.LENGTH_SHORT).show();
     }
-
-    // initGame() - clear array and set all btns to enabled
-    // set person who start with first turn
 
 }

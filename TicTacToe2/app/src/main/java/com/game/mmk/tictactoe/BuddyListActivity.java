@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -17,10 +16,8 @@ import android.widget.Toast;
 import org.jivesoftware.smack.chat.ChatManager;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.roster.Roster;
-import org.jivesoftware.smack.roster.RosterEntry;
 import org.jivesoftware.smack.roster.RosterListener;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -73,23 +70,18 @@ public class BuddyListActivity extends ActionBarActivity {
         roster.addRosterListener(new RosterListener() {
             @Override
             public void entriesAdded(Collection<String> addresses) {
-                Log.d("Roster was changed", "added");
             }
 
             @Override
             public void entriesUpdated(Collection<String> addresses) {
-                Log.d("Roster was changed", "updated");
             }
 
             @Override
             public void entriesDeleted(Collection<String> addresses) {
-                Log.d("Roster was changed", "dsad");
             }
 
             @Override
             public void presenceChanged(Presence presence) {
-
-                Log.d("Roster was changed", String.valueOf(presence.isAvailable()));
 
                 runOnUiThread(new Runnable() {
                     @Override

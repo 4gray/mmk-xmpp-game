@@ -153,7 +153,7 @@
         android:layout_marginTop="10dp"
         android:id="@+id/turnIndicatorImg"
         android:background="@drawable/circle1"
-        android:scaleType="fitCenter"
+        android:scaleType="fitXY"
         android:adjustViewBounds="true"
         android:layout_below="@+id/imageView2"
         android:layout_toRightOf="@+id/cancelBtn"
