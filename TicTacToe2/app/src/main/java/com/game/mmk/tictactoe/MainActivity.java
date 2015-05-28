@@ -141,36 +141,16 @@ public class MainActivity extends ActionBarActivity {
                     break;
                 case "lose":
                     _builder.setTitle("Ohhh")
-                            .setMessage("Du hast verloren!\nNochmal spielen?")
+                            .setMessage("Du hast verloren!")
                             .setIcon(android.R.drawable.ic_dialog_alert)
-                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    playAgain();
-                                }
-                            })
-                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    goToBuddyList();
-                                }
-                            })
                             .show();
                     GameLogic.getInstance().initNewGame();
                     break;
                 case "draw":
                     _builder
                             .setTitle("Wow")
-                            .setMessage("Unentschieden!\nNochmal spielen?")
+                            .setMessage("Unentschieden!")
                             .setIcon(android.R.drawable.ic_dialog_alert)
-                            .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    playAgain();
-                                }
-                            })
-                            .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                                public void onClick(DialogInterface dialog, int which) {
-                                    goToBuddyList();
-                                }
-                            })
                             .show();
                     GameLogic.getInstance().initNewGame();
                     break;
@@ -227,19 +207,6 @@ public class MainActivity extends ActionBarActivity {
         timer.schedule(tt,30000);
     }
 
-    public void playAgain() {
-        Toast.makeText(getApplicationContext(), _gameOpponent, Toast.LENGTH_LONG).show();
-
-        Intent intent = new Intent();
-        intent.setClass(this, BuddyListActivity.class);
-
-        TMessage tm = new TMessage("invite", "playAgain", _gameOpponent);
-
-        intent.putExtra("Message", tm);
-
-        startActivity(intent);
-    }
-
     // tic or tac click
     public void gameTurn(View view) {
 
@@ -271,18 +238,8 @@ public class MainActivity extends ActionBarActivity {
         if (_gameDecision == true) {
             _builder
                     .setTitle("Gl\u00FCckwunsch")
-                    .setMessage("Du hast gewonnen!\nNochmal spielen?")
+                    .setMessage("Du hast gewonnen!")
                     .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            playAgain();
-                        }
-                    })
-                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            goToBuddyList();
-                        }
-                    })
                     .show();
             XMPP.getInstance().sendMessage("game", "lose", XMPP.getInstance().getGameOpponent());
             GameLogic.getInstance().initNewGame();
@@ -290,18 +247,8 @@ public class MainActivity extends ActionBarActivity {
         else if (GameLogic.getInstance().getTurnCounter() == _turnLimit) {
             _builder
                     .setTitle("Wow")
-                    .setMessage("Unentschieden!\nNochmal spielen?")
+                    .setMessage("Unentschieden!")
                     .setIcon(android.R.drawable.ic_dialog_alert)
-                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            playAgain();
-                        }
-                    })
-                    .setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            goToBuddyList();
-                        }
-                    })
                     .show();
             XMPP.getInstance().sendMessage("game", "draw", XMPP.getInstance().getGameOpponent());
             GameLogic.getInstance().initNewGame();

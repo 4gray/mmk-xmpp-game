@@ -106,8 +106,6 @@ public class BuddyListActivity extends ActionBarActivity {
         final String from = tm.getFrom();
         timer = new Timer();
 
-        Toast.makeText(getApplicationContext(), body, Toast.LENGTH_LONG).show();
-
         if (body.equals("invitation")) {
             builder
                     .setTitle("Einladung")
@@ -146,12 +144,7 @@ public class BuddyListActivity extends ActionBarActivity {
             Toast.makeText(getApplicationContext(), "Timeout", Toast.LENGTH_LONG).show();
             dlg.dismiss();
             timer.cancel();
-        } else if (body.equals("playAgain")) {
-            timer.cancel();
-            Toast.makeText(getApplicationContext(), "Play again with " + from, Toast.LENGTH_LONG).show();
-            sendInvitation(from);
         }
-
     }
 
 
